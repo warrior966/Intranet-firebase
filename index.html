@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Intranet Privada</title>
+    <title>Intranet Corporativa</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
@@ -14,6 +14,7 @@
             <input type="email" id="login-email" placeholder="Correo electrónico">
             <input type="password" id="login-pass" placeholder="Contraseña">
             <button onclick="login()">Entrar</button>
+            <p id="login-error" style="color: red; font-size: 12px;"></p>
         </div>
     </div>
 
@@ -33,25 +34,22 @@
                     <ul class="link-list">
                         <li><a href="https://github.com" target="_blank">Repo de GitHub</a></li>
                         <li><a href="https://console.firebase.google.com/" target="_blank">Consola Firebase</a></li>
-                        <li><a href="#">Documentación Interna</a></li>
                     </ul>
                 </section>
 
-                <section class="card" id="contacto">
-                    <h3>📧 Contacto</h3>
-                    <p>Para soporte técnico contacta con:</p>
-                    <p><strong>admin@tuempresa.com</strong></p>
-                </section>
-
-                <section class="card" id="registro">
+                <section class="card" id="registro-section">
                     <h3>📝 Registro de Usuarios</h3>
                     <div id="admin-only-form" style="display:none;">
-                        <p><small>Solo tú puedes ver este formulario.</small></p>
-                        <input type="email" id="reg-email" placeholder="Nuevo correo">
-                        <input type="password" id="reg-pass" placeholder="Nueva contraseña">
+                        <input type="email" id="reg-email" placeholder="Correo nuevo">
+                        <input type="password" id="reg-pass" placeholder="Contraseña nueva">
                         <button onclick="registerUser()" class="btn-admin">Crear Usuario</button>
                     </div>
-                    <p id="no-admin-msg">Acceso restringido: Solo lectura para empleados.</p>
+                    <p id="no-admin-msg">Acceso restringido: Solo lectura.</p>
+                </section>
+
+                <section class="card">
+                    <h3>📧 Contacto</h3>
+                    <p>Soporte: <strong>admin@tuempresa.com</strong></p>
                 </section>
             </div>
 
@@ -60,7 +58,7 @@
                     <h3>💬 Chat en Vivo</h3>
                     <div id="chat-box" class="chat-display"></div>
                     <div class="chat-input-area">
-                        <input type="text" id="chat-input" placeholder="Escribe un mensaje...">
+                        <input type="text" id="chat-input" placeholder="Mensaje...">
                         <button onclick="sendMessage()">Enviar</button>
                     </div>
                 </section>
