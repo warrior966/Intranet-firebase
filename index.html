@@ -3,52 +3,69 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Mi Intranet Privada</title>
+    <title>Intranet Privada</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
-    <div id="login-section">
-        <h2>Iniciar Sesión</h2>
-        <input type="email" id="login-email" placeholder="Correo">
-        <input type="password" id="login-pass" placeholder="Contraseña">
-        <button onclick="login()">Entrar</button>
+    <div id="login-section" class="container">
+        <div class="card">
+            <h2>🔐 Acceso Intranet</h2>
+            <input type="email" id="login-email" placeholder="Correo electrónico">
+            <input type="password" id="login-pass" placeholder="Contraseña">
+            <button onclick="login()">Entrar</button>
+        </div>
     </div>
 
     <div id="main-content" style="display:none;">
-        <nav>
-            <button onclick="logout()">Cerrar Sesión</button>
-            <span id="admin-badge" style="display:none; color: gold;">⭐ Admin</span>
+        <nav class="navbar">
+            <h1>Mi Intranet</h1>
+            <div class="nav-right">
+                <span id="admin-badge" class="badge" style="display:none;">⭐ Administrador</span>
+                <button class="btn-logout" onclick="logout()">Cerrar Sesión</button>
+            </div>
         </nav>
 
-        <section id="enlaces">
-            <h3>🔗 Enlaces de Interés</h3>
-            <ul id="lista-enlaces">
-                <li><a href="#">Manual de Empleado</a></li>
-            </ul>
-        </section>
+        <div class="grid-container">
+            <div class="column">
+                <section class="card">
+                    <h3>🔗 Enlaces de Interés</h3>
+                    <ul class="link-list">
+                        <li><a href="https://github.com" target="_blank">Repo de GitHub</a></li>
+                        <li><a href="https://console.firebase.google.com/" target="_blank">Consola Firebase</a></li>
+                        <li><a href="#">Documentación Interna</a></li>
+                    </ul>
+                </section>
 
-        <section id="chat">
-            <h3>💬 Chat en Vivo</h3>
-            <div id="chat-box" style="height: 200px; overflow-y: scroll; border: 1px solid #ccc;"></div>
-            <input type="text" id="chat-input" placeholder="Escribe un mensaje...">
-            <button onclick="sendMessage()">Enviar</button>
-        </section>
+                <section class="card" id="contacto">
+                    <h3>📧 Contacto</h3>
+                    <p>Para soporte técnico contacta con:</p>
+                    <p><strong>admin@tuempresa.com</strong></p>
+                </section>
 
-        <section id="registro">
-            <h3>📝 Registro de Usuarios (Solo Admin)</h3>
-            <div id="admin-only-form" style="display:none;">
-                <input type="email" id="reg-email" placeholder="Nuevo correo">
-                <input type="password" id="reg-pass" placeholder="Nueva contraseña">
-                <button onclick="registerUser()">Crear Usuario</button>
+                <section class="card" id="registro">
+                    <h3>📝 Registro de Usuarios</h3>
+                    <div id="admin-only-form" style="display:none;">
+                        <p><small>Solo tú puedes ver este formulario.</small></p>
+                        <input type="email" id="reg-email" placeholder="Nuevo correo">
+                        <input type="password" id="reg-pass" placeholder="Nueva contraseña">
+                        <button onclick="registerUser()" class="btn-admin">Crear Usuario</button>
+                    </div>
+                    <p id="no-admin-msg">Acceso restringido: Solo lectura para empleados.</p>
+                </section>
             </div>
-            <p id="no-admin-msg">No tienes permisos para registrar usuarios.</p>
-        </section>
 
-        <section id="contacto">
-            <h3>📧 Contacto</h3>
-            <p>Soporte técnico: admin@tuempresa.com</p>
-        </section>
+            <div class="column">
+                <section class="card chat-section">
+                    <h3>💬 Chat en Vivo</h3>
+                    <div id="chat-box" class="chat-display"></div>
+                    <div class="chat-input-area">
+                        <input type="text" id="chat-input" placeholder="Escribe un mensaje...">
+                        <button onclick="sendMessage()">Enviar</button>
+                    </div>
+                </section>
+            </div>
+        </div>
     </div>
 
     <script type="module" src="app.js"></script>
