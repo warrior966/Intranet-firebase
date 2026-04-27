@@ -1,20 +1,6 @@
 import { initializeApp } from "firebase/app";
-import { 
-    getAuth, 
-    signInWithEmailAndPassword, 
-    signOut, 
-    onAuthStateChanged,
-    createUserWithEmailAndPassword 
-} from "firebase/auth";
-import { 
-    getFirestore, 
-    collection, 
-    addDoc, 
-    query, 
-    orderBy, 
-    onSnapshot, 
-    serverTimestamp 
-} from "firebase/firestore";
+import { getAuth, signInWithEmailAndPassword, signOut, onAuthStateChanged, createUserWithEmailAndPassword } from "firebase/auth";
+import { getFirestore, collection, addDoc, query, orderBy, onSnapshot, serverTimestamp } from "firebase/firestore";
 
 const firebaseConfig = {
   apiKey: "AIzaSyBTYP9tUmDjYFwUA5nJW4QDh2-Kx5r1JSo",
@@ -26,84 +12,95 @@ const firebaseConfig = {
   measurementId: "G-Q3E6N573G5"
 };
 
-// Inicializar
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 const db = getFirestore(app);
 
-// --- ⚠️ PEGA AQUÍ TU UID DE ADMIN ---
-const ADMIN_UID = "lfdI9RkSHrNc6tL94uhWcDgtffY2"; 
+// PEGA AQUÍ TU UID después de tu primer login (lo ves en la consola de Firebase)
+const ADMIN_UID = "TU_UID_REAL_AQUI"; 
 
-// LOGIN
+// --- FUNCIONES GLOBALES ---
+
 window.login = async () => {
     const email = document.getElementById('login-email').value;
     const pass = document.getElementById('login-pass').value;
+    const errorMsg = document.getElementById('login-error');
+    
     try {
+        errorMsg.innerText = "Cargando...";
         await signInWithEmailAndPassword(auth, email, pass);
+    } catch (e) {
+        errorMsg.innerText = "Error: " + e.message;
+        console.error("Error de login:", e.code);
+    }
+};
+
+window.logout = () => signOut(auth);
+
+window.sendMessage = async () => {
+    const input = document.getElementById('chat-input');
+    if (input.value.trim() !== "" && auth.currentUser) {
+        try {
+            await addDoc(collection(db, "mensajes"), {
+                texto: input.value,
+                usuario: auth.currentUser.email,
+                fecha: serverTimestamp()
+            });
+            input.value = "";
+        } catch (e) { console.error("Error al enviar mensaje:", e); }
+    }
+};
+
+window.registerUser = async () => {
+    const email = document.getElementById('reg-email').value;
+    const pass = document.getElementById('reg-pass').value;
+    try {
+        await createUserWithEmailAndPassword(auth, email, pass);
+        alert("Usuario " + email + " creado con éxito.");
+        document.getElementById('reg-email').value = "";
+        document.getElementById('reg-pass').value = "";
     } catch (e) { alert("Error: " + e.message); }
 };
 
-// LOGOUT
-window.logout = () => signOut(auth);
+// --- OBSERVADOR DE SESIÓN ---
 
-// ESTADO DE LA SESIÓN
 onAuthStateChanged(auth, (user) => {
     const loginSec = document.getElementById('login-section');
     const mainCont = document.getElementById('main-content');
-    const adminBadge = document.getElementById('admin-badge');
-    const adminForm = document.getElementById('admin-only-form');
-    const noAdminMsg = document.getElementById('no-admin-msg');
-
+    
     if (user) {
         loginSec.style.display = 'none';
         mainCont.style.display = 'block';
         
-        if (user.uid === ADMIN_UID) {
-            adminBadge.style.display = 'inline';
-            adminForm.style.display = 'block';
-            noAdminMsg.style.display = 'none';
-        } else {
-            adminBadge.style.display = 'none';
-            adminForm.style.display = 'none';
-            noAdminMsg.style.display = 'block';
-        }
+        // Control de Admin
+        const isAdmin = user.uid === ADMIN_UID;
+        document.getElementById('admin-badge').style.display = isAdmin ? 'inline' : 'none';
+        document.getElementById('admin-only-form').style.display = isAdmin ? 'block' : 'none';
+        document.getElementById('no-admin-msg').style.display = isAdmin ? 'none' : 'block';
+        
+        cargarChat();
     } else {
         loginSec.style.display = 'flex';
         mainCont.style.display = 'none';
     }
 });
 
-// CHAT: ENVIAR
-window.sendMessage = async () => {
-    const input = document.getElementById('chat-input');
-    if (input.value.trim() !== "") {
-        await addDoc(collection(db, "mensajes"), {
-            texto: input.value,
-            usuario: auth.currentUser.email,
-            fecha: serverTimestamp()
+// --- LÓGICA DEL CHAT ---
+
+function cargarChat() {
+    const q = query(collection(db, "mensajes"), orderBy("fecha", "asc"));
+    onSnapshot(q, (snapshot) => {
+        const chatBox = document.getElementById('chat-box');
+        chatBox.innerHTML = "";
+        snapshot.forEach((doc) => {
+            const data = doc.data();
+            const time = data.fecha ? new Date(data.fecha.toDate()).toLocaleTimeString() : "...";
+            chatBox.innerHTML += `
+                <div style="margin-bottom: 8px;">
+                    <small style="color: #888;">[${time}]</small> 
+                    <strong>${data.usuario.split('@')[0]}:</strong> ${data.texto}
+                </div>`;
         });
-        input.value = "";
-    }
-};
-
-// CHAT: RECIBIR EN TIEMPO REAL
-const q = query(collection(db, "mensajes"), orderBy("fecha", "asc"));
-onSnapshot(q, (snapshot) => {
-    const chatBox = document.getElementById('chat-box');
-    chatBox.innerHTML = "";
-    snapshot.forEach((doc) => {
-        const data = doc.data();
-        chatBox.innerHTML += `<p><strong>${data.usuario}:</strong> ${data.texto}</p>`;
+        chatBox.scrollTop = chatBox.scrollHeight;
     });
-    chatBox.scrollTop = chatBox.scrollHeight;
-});
-
-// REGISTRO DE USUARIOS (SOLO ADMIN)
-window.registerUser = async () => {
-    const email = document.getElementById('reg-email').value;
-    const pass = document.getElementById('reg-pass').value;
-    try {
-        await createUserWithEmailAndPassword(auth, email, pass);
-        alert("Usuario registrado!");
-    } catch (e) { alert("Error: " + e.message); }
-};
+}
