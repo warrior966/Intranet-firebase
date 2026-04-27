@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mi Intranet Privada</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <div id="login-section">
+        <h2>Iniciar Sesión</h2>
+        <input type="email" id="login-email" placeholder="Correo">
+        <input type="password" id="login-pass" placeholder="Contraseña">
+        <button onclick="login()">Entrar</button>
+    </div>
+
+    <div id="main-content" style="display:none;">
+        <nav>
+            <button onclick="logout()">Cerrar Sesión</button>
+            <span id="admin-badge" style="display:none; color: gold;">⭐ Admin</span>
+        </nav>
+
+        <section id="enlaces">
+            <h3>🔗 Enlaces de Interés</h3>
+            <ul id="lista-enlaces">
+                <li><a href="#">Manual de Empleado</a></li>
+            </ul>
+        </section>
+
+        <section id="chat">
+            <h3>💬 Chat en Vivo</h3>
+            <div id="chat-box" style="height: 200px; overflow-y: scroll; border: 1px solid #ccc;"></div>
+            <input type="text" id="chat-input" placeholder="Escribe un mensaje...">
+            <button onclick="sendMessage()">Enviar</button>
+        </section>
+
+        <section id="registro">
+            <h3>📝 Registro de Usuarios (Solo Admin)</h3>
+            <div id="admin-only-form" style="display:none;">
+                <input type="email" id="reg-email" placeholder="Nuevo correo">
+                <input type="password" id="reg-pass" placeholder="Nueva contraseña">
+                <button onclick="registerUser()">Crear Usuario</button>
+            </div>
+            <p id="no-admin-msg">No tienes permisos para registrar usuarios.</p>
+        </section>
+
+        <section id="contacto">
+            <h3>📧 Contacto</h3>
+            <p>Soporte técnico: admin@tuempresa.com</p>
+        </section>
+    </div>
+
+    <script type="module" src="app.js"></script>
+</body>
+</html>
