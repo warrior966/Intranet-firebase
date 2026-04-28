@@ -3,69 +3,56 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Intranet Corporativa</title>
-    <link rel="stylesheet" href="style.css">
+    <title>Login | Intranet</title>
+    <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body>
-
-    <div id="login-section" class="container">
-        <div class="card">
-            <h2>🔐 Acceso Intranet</h2>
-            <input type="email" id="login-email" placeholder="Correo electrónico">
-            <input type="password" id="login-pass" placeholder="Contraseña">
-            <button onclick="login()">Entrar</button>
-            <p id="login-error" style="color: red; font-size: 12px;"></p>
+<body class="bg-slate-100 flex items-center justify-center h-screen">
+    <div class="bg-white p-8 rounded-2xl shadow-xl w-full max-w-md">
+        <div class="text-center mb-8">
+            <h1 class="text-3xl font-bold text-slate-800">Bienvenido</h1>
+            <p class="text-slate-500">Acceso Privado</p>
+        </div>
+        <div class="space-y-4">
+            <input type="email" id="email" placeholder="Email" class="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 outline-none">
+            <input type="password" id="password" placeholder="Contraseña" class="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 outline-none">
+            <button id="btnLogin" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 rounded-lg transition shadow-lg">Entrar</button>
         </div>
     </div>
 
-    <div id="main-content" style="display:none;">
-        <nav class="navbar">
-            <h1>Mi Intranet</h1>
-            <div class="nav-right">
-                <span id="admin-badge" class="badge" style="display:none;">⭐ Administrador</span>
-                <button class="btn-logout" onclick="logout()">Cerrar Sesión</button>
-            </div>
-        </nav>
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+        import { getAuth, signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+        import { getFirestore, doc, getDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
-        <div class="grid-container">
-            <div class="column">
-                <section class="card">
-                    <h3>🔗 Enlaces de Interés</h3>
-                    <ul class="link-list">
-                        <li><a href="https://github.com" target="_blank">Repo de GitHub</a></li>
-                        <li><a href="https://console.firebase.google.com/" target="_blank">Consola Firebase</a></li>
-                    </ul>
-                </section>
+        const firebaseConfig = {
+            apiKey: "AIzaSyAJd8syrMPQunEfBTH0sf9Khj_mSTkWeto",
+            authDomain: "intranet-ba388.firebaseapp.com",
+            projectId: "intranet-ba388",
+            storageBucket: "intranet-ba388.firebasestorage.app",
+            messagingSenderId: "104208696906",
+            appId: "1:104208696906:web:1dc5ddf05d28d3eb89c8b3"
+        };
 
-                <section class="card" id="registro-section">
-                    <h3>📝 Registro de Usuarios</h3>
-                    <div id="admin-only-form" style="display:none;">
-                        <input type="email" id="reg-email" placeholder="Correo nuevo">
-                        <input type="password" id="reg-pass" placeholder="Contraseña nueva">
-                        <button onclick="registerUser()" class="btn-admin">Crear Usuario</button>
-                    </div>
-                    <p id="no-admin-msg">Acceso restringido: Solo lectura.</p>
-                </section>
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getFirestore(app);
 
-                <section class="card">
-                    <h3>📧 Contacto</h3>
-                    <p>Soporte: <strong>admin@tuempresa.com</strong></p>
-                </section>
-            </div>
+        document.getElementById('btnLogin').onclick = async () => {
+            const email = document.getElementById('email').value.toLowerCase().trim();
+            const pass = document.getElementById('password').value;
 
-            <div class="column">
-                <section class="card chat-section">
-                    <h3>💬 Chat en Vivo</h3>
-                    <div id="chat-box" class="chat-display"></div>
-                    <div class="chat-input-area">
-                        <input type="text" id="chat-input" placeholder="Mensaje...">
-                        <button onclick="sendMessage()">Enviar</button>
-                    </div>
-                </section>
-            </div>
-        </div>
-    </div>
+            try {
+                const userCredential = await signInWithEmailAndPassword(auth, email, pass);
+                const userDoc = await getDoc(doc(db, "usuarios_autorizados", email));
 
-    <script type="module" src="app.js"></script>
+                if (userDoc.exists()) {
+                    window.location.href = "dashboard.html";
+                } else {
+                    await auth.signOut();
+                    alert("No estás autorizado para entrar.");
+                }
+            } catch (e) { alert("Credenciales incorrectas"); }
+        };
+    </script>
 </body>
 </html>
