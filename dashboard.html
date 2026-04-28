@@ -8,59 +8,80 @@
     <style>
         .tab-content { display: none; }
         .active-tab { display: block; }
-        .nav-active { border-bottom: 3px solid #2563eb; color: #2563eb; }
+        .nav-active { border-bottom: 3px solid #2563eb; color: #2563eb; background-color: #f8fafc; }
     </style>
 </head>
 <body class="bg-slate-50 min-h-screen">
-    <header class="bg-white shadow-sm px-6 py-4 flex justify-between items-center">
-        <h2 class="text-xl font-bold text-blue-600 tracking-tight">INTRANET</h2>
+    <header class="bg-white shadow-sm px-6 py-4 flex justify-between items-center sticky top-0 z-20">
+        <h2 class="text-xl font-black text-blue-600 tracking-tighter italic">MI INTRANET</h2>
         <div class="flex items-center gap-4 text-sm font-medium">
-            <span id="user-name" class="text-slate-600"></span>
-            <button id="btnLogout" class="text-red-500 hover:underline">Cerrar Sesión</button>
+            <span id="user-name" class="text-slate-600 bg-slate-100 px-3 py-1 rounded-full text-xs">Cargando...</span>
+            <button id="btnLogout" class="text-red-500 hover:text-red-700 transition font-bold">Salir</button>
         </div>
     </header>
 
-    <nav class="flex justify-center bg-white border-b sticky top-0 z-10">
-        <button onclick="showTab('enlaces')" class="tab-btn px-6 py-4 font-semibold nav-active">Enlaces</button>
-        <button onclick="showTab('chat')" class="tab-btn px-6 py-4 font-semibold">Chat</button>
-        <button id="admin-tab" onclick="showTab('admin')" class="tab-btn px-6 py-4 font-semibold hidden text-purple-600">Panel Admin</button>
+    <nav class="flex justify-center bg-white border-b sticky top-14 z-10">
+        <button onclick="showTab('enlaces')" class="tab-btn px-6 py-4 font-bold text-sm uppercase tracking-wider nav-active">Enlaces</button>
+        <button onclick="showTab('chat')" class="tab-btn px-6 py-4 font-bold text-sm uppercase tracking-wider">Chat</button>
+        <button onclick="showTab('cuenta')" class="tab-btn px-6 py-4 font-bold text-sm uppercase tracking-wider">Mi Cuenta</button>
+        <button id="admin-tab" onclick="showTab('admin')" class="tab-btn px-6 py-4 font-bold text-sm uppercase tracking-wider hidden text-purple-600">Admin</button>
     </nav>
 
-    <main class="max-w-4xl mx-auto p-6">
+    <main class="max-w-5xl mx-auto p-6">
+        
         <section id="enlaces" class="tab-content active-tab space-y-4">
             <h3 class="text-2xl font-bold text-slate-800">Enlaces de Interés</h3>
-            <div id="links-container" class="grid grid-cols-1 md:grid-cols-2 gap-4"></div>
+            <div id="links-container" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4"></div>
         </section>
 
         <section id="chat" class="tab-content space-y-4">
-            <h3 class="text-2xl font-bold text-slate-800">Chat del Equipo</h3>
-            <div class="bg-white rounded-2xl shadow-sm border overflow-hidden flex flex-col h-[500px]">
-                <div id="chat-messages" class="flex-1 p-4 overflow-y-auto space-y-3 bg-slate-50"></div>
+            <h3 class="text-2xl font-bold text-slate-800 text-center">Chat de Equipo</h3>
+            <div class="bg-white rounded-3xl shadow-xl border border-slate-200 overflow-hidden flex flex-col h-[60vh] max-w-2xl mx-auto">
+                <div id="chat-messages" class="flex-1 p-6 overflow-y-auto space-y-4 bg-slate-50"></div>
                 <div class="p-4 bg-white border-t flex gap-2">
-                    <input type="text" id="chat-input" placeholder="Escribe un mensaje..." class="flex-1 px-4 py-2 border rounded-xl outline-none focus:ring-2 focus:ring-blue-500">
-                    <button id="btnSend" class="bg-blue-600 text-white px-6 py-2 rounded-xl font-bold hover:bg-blue-700 transition">Enviar</button>
+                    <input type="text" id="chat-input" placeholder="Escribe algo aquí..." class="flex-1 px-4 py-3 border rounded-2xl outline-none focus:ring-2 focus:ring-blue-500 bg-slate-50">
+                    <button id="btnSend" class="bg-blue-600 text-white px-8 py-3 rounded-2xl font-bold hover:bg-blue-700 transition">Enviar</button>
+                </div>
+            </div>
+        </section>
+
+        <section id="cuenta" class="tab-content space-y-6 max-w-xl mx-auto">
+            <h3 class="text-2xl font-bold text-slate-800">Mi Cuenta</h3>
+            <div class="bg-white p-8 rounded-3xl shadow-lg border border-slate-100 space-y-8">
+                <div class="space-y-3">
+                    <label class="text-sm font-bold text-slate-500 uppercase">Nombre Público</label>
+                    <div class="flex gap-2">
+                        <input type="text" id="display-name-input" class="flex-1 px-4 py-3 border rounded-xl bg-slate-50 outline-none" placeholder="Escribe tu nombre">
+                        <button id="btnUpdateProfile" class="bg-blue-600 text-white px-5 py-3 rounded-xl font-bold text-sm">Actualizar</button>
+                    </div>
+                </div>
+                <hr>
+                <div class="space-y-3">
+                    <label class="text-sm font-bold text-slate-500 uppercase">Seguridad</label>
+                    <input type="password" id="new-password-input" class="w-full px-4 py-3 border rounded-xl bg-slate-50 outline-none" placeholder="Nueva contraseña">
+                    <button id="btnUpdatePass" class="w-full bg-slate-800 text-white py-3 rounded-xl font-bold transition hover:bg-black">Cambiar Contraseña</button>
                 </div>
             </div>
         </section>
 
         <section id="admin" class="tab-content space-y-6">
-            <h3 class="text-2xl font-bold text-purple-700">Administración</h3>
+            <h3 class="text-2xl font-bold text-purple-700">Panel Admin</h3>
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <div class="bg-white p-6 rounded-2xl shadow-sm border">
-                    <h4 class="font-bold mb-4 text-slate-700">Autorizar Usuario</h4>
+                <div class="bg-white p-6 rounded-2xl shadow-sm border border-purple-100">
+                    <h4 class="font-bold mb-4 text-slate-800">Autorizar Usuarios</h4>
                     <div class="flex gap-2 mb-4">
-                        <input type="email" id="new-user-email" class="flex-1 px-3 py-2 border rounded-lg" placeholder="email@empresa.com">
-                        <button id="btnAddUser" class="bg-purple-600 text-white px-4 py-2 rounded-lg font-bold">Añadir</button>
+                        <input type="email" id="new-user-email" class="flex-1 px-3 py-2 border rounded-xl outline-none" placeholder="correo@empresa.com">
+                        <button id="btnAddUser" class="bg-purple-600 text-white px-4 py-2 rounded-xl font-bold hover:bg-purple-700">Añadir</button>
                     </div>
                     <ul id="user-list" class="divide-y max-h-60 overflow-y-auto"></ul>
                 </div>
-                <div class="bg-white p-6 rounded-2xl shadow-sm border space-y-4 text-sm">
-                    <h4 class="font-bold text-slate-700">Gestión de Contenido</h4>
-                    <input type="text" id="link-title" class="w-full px-3 py-2 border rounded-lg" placeholder="Título Enlace">
-                    <input type="url" id="link-url" class="w-full px-3 py-2 border rounded-lg" placeholder="URL (https://...)">
-                    <button id="btnSaveLink" class="w-full bg-slate-800 text-white py-2 rounded-lg font-bold">Publicar Enlace</button>
+                <div class="bg-white p-6 rounded-2xl shadow-sm border space-y-4">
+                    <h4 class="font-bold text-slate-800 text-sm uppercase">Nuevo Enlace de Interés</h4>
+                    <input type="text" id="link-title" class="w-full px-4 py-2 border rounded-xl outline-none" placeholder="Título (ej: Google)">
+                    <input type="url" id="link-url" class="w-full px-4 py-2 border rounded-xl outline-none" placeholder="URL (https://...)">
+                    <button id="btnSaveLink" class="w-full bg-slate-800 text-white py-3 rounded-xl font-bold">Publicar Enlace</button>
                     <hr>
-                    <button onclick="clearChat()" class="w-full text-red-600 font-bold py-2 border border-red-200 rounded-lg hover:bg-red-50">🗑 Vaciar Chat</button>
+                    <button onclick="clearChat()" class="w-full text-red-500 font-bold py-3 hover:bg-red-50 rounded-xl border border-red-100 transition">🗑 Borrar todo el Chat</button>
                 </div>
             </div>
         </section>
@@ -68,7 +89,7 @@
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-        import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+        import { getAuth, onAuthStateChanged, signOut, updateProfile, updatePassword } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
         import { getFirestore, collection, addDoc, query, orderBy, onSnapshot, serverTimestamp, doc, setDoc, deleteDoc, getDocs } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
         const firebaseConfig = {
@@ -83,67 +104,103 @@
         const app = initializeApp(firebaseConfig);
         const auth = getAuth(app);
         const db = getFirestore(app);
-        const adminEmails = ["u6282143640@gmail.com", "alvaro.guerreromaldonado@alumno.fomento.edu"]; // CAMBIA ESTO
+        
+        // --- CAMBIA ESTO CON TU CORREO PARA VER EL PANEL ADMIN ---
+        const adminEmails = ["alvaro.guerreromaldonado@alumno.fomento.edu", "u6282143640@gmail.com"]; 
 
+        // NAVEGACIÓN
         window.showTab = (tabId) => {
             document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active-tab'));
             document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('nav-active'));
             document.getElementById(tabId).classList.add('active-tab');
-            event.target.classList.add('nav-active');
+            if(event) event.target.classList.add('nav-active');
         };
 
         onAuthStateChanged(auth, (user) => {
             if (user) {
-                document.getElementById('user-name').innerText = user.email;
-                if (adminEmails.includes(user.email)) document.getElementById('admin-tab').classList.remove('hidden');
-            } else { window.location.href = "index.html"; }
+                document.getElementById('user-name').innerText = user.displayName || user.email;
+                document.getElementById('display-name-input').value = user.displayName || "";
+                if (adminEmails.includes(user.email)) {
+                    document.getElementById('admin-tab').classList.remove('hidden');
+                }
+            } else {
+                window.location.href = "index.html";
+            }
         });
 
         document.getElementById('btnLogout').onclick = () => signOut(auth);
 
-        // --- CHAT ---
+        // --- LÓGICA CHAT ---
         const chatRef = collection(db, "chat");
         document.getElementById('btnSend').onclick = async () => {
             const input = document.getElementById('chat-input');
             if(input.value.trim()) {
-                await addDoc(chatRef, { text: input.value, user: auth.currentUser.email, timestamp: serverTimestamp() });
+                await addDoc(chatRef, { 
+                    text: input.value, 
+                    user: auth.currentUser.displayName || auth.currentUser.email, 
+                    timestamp: serverTimestamp() 
+                });
                 input.value = "";
             }
         };
         onSnapshot(query(chatRef, orderBy("timestamp", "asc")), (snap) => {
             const box = document.getElementById('chat-messages');
-            box.innerHTML = snap.docs.map(d => `<div class="bg-white p-3 rounded-xl shadow-sm border-l-4 border-blue-500 text-sm"><p class="font-bold text-blue-600 mb-1">${d.data().user}</p><p class="text-slate-700">${d.data().text}</p></div>`).join('');
+            box.innerHTML = snap.docs.map(d => `
+                <div class="flex flex-col ${d.data().user === (auth.currentUser.displayName || auth.currentUser.email) ? 'items-end' : 'items-start'}">
+                    <div class="max-w-[80%] ${d.data().user === (auth.currentUser.displayName || auth.currentUser.email) ? 'bg-blue-600 text-white rounded-l-2xl rounded-tr-2xl' : 'bg-white text-slate-800 rounded-r-2xl rounded-tl-2xl border'} p-4 shadow-sm">
+                        <p class="text-[10px] font-black opacity-70 uppercase mb-1">${d.data().user}</p>
+                        <p class="text-sm">${d.data().text}</p>
+                    </div>
+                </div>`).join('');
             box.scrollTop = box.scrollHeight;
         });
 
-        // --- ENLACES ---
+        // --- LÓGICA ENLACES ---
         const linksRef = collection(db, "enlaces");
         document.getElementById('btnSaveLink').onclick = async () => {
             const t = document.getElementById('link-title'), u = document.getElementById('link-url');
             if(t.value && u.value) {
                 await addDoc(linksRef, { nombre: t.value, url: u.value, createdAt: serverTimestamp() });
-                t.value = ""; u.value = "";
+                t.value = ""; u.value = ""; alert("Publicado");
             }
         };
         onSnapshot(query(linksRef, orderBy("createdAt", "desc")), (snap) => {
             document.getElementById('links-container').innerHTML = snap.docs.map(d => `
-                <a href="${d.data().url}" target="_blank" class="bg-white p-5 rounded-2xl shadow-sm hover:shadow-md transition border border-slate-100 flex justify-between items-center group">
-                    <span class="font-bold text-slate-700 group-hover:text-blue-600 transition">${d.data().nombre}</span>
-                    <span class="text-blue-500 font-black">→</span>
+                <a href="${d.data().url}" target="_blank" class="bg-white p-6 rounded-3xl shadow-sm hover:shadow-xl transition-all border border-slate-100 flex flex-col gap-2 group">
+                    <span class="font-black text-slate-800 group-hover:text-blue-600 uppercase text-xs tracking-widest">${d.data().nombre}</span>
+                    <span class="text-xs text-slate-400 truncate">${d.data().url}</span>
                 </a>
             `).join('');
         });
 
-        // --- ADMIN ---
+        // --- LÓGICA MI CUENTA ---
+        document.getElementById('btnUpdateProfile').onclick = async () => {
+            try {
+                await updateProfile(auth.currentUser, { displayName: document.getElementById('display-name-input').value });
+                alert("Nombre actualizado");
+                location.reload();
+            } catch (e) { alert("Error al actualizar"); }
+        };
+        document.getElementById('btnUpdatePass').onclick = async () => {
+            const newPass = document.getElementById('new-password-input').value;
+            if (newPass.length < 6) return alert("Mínimo 6 caracteres");
+            try {
+                await updatePassword(auth.currentUser, newPass);
+                alert("Contraseña cambiada");
+                document.getElementById('new-password-input').value = "";
+            } catch (e) { alert("Error: Debes re-iniciar sesión para hacer este cambio."); }
+        };
+
+        // --- LÓGICA ADMIN ---
         document.getElementById('btnAddUser').onclick = async () => {
             const email = document.getElementById('new-user-email').value.toLowerCase().trim();
             if(email) await setDoc(doc(db, "usuarios_autorizados", email), { email, addedAt: serverTimestamp() });
         };
         onSnapshot(collection(db, "usuarios_autorizados"), (snap) => {
             document.getElementById('user-list').innerHTML = snap.docs.map(d => `
-                <li class="py-3 flex justify-between items-center text-sm">
+                <li class="py-3 flex justify-between items-center text-xs font-bold">
                     <span class="text-slate-600">${d.id}</span>
-                    <button onclick="removeUser('${d.id}')" class="text-red-500 font-bold hover:bg-red-50 px-2 py-1 rounded">Quitar</button>
+                    <button onclick="removeUser('${d.id}')" class="text-red-500 hover:bg-red-50 px-3 py-1 rounded-lg transition">BORRAR</button>
                 </li>
             `).join('');
         });
