@@ -3,19 +3,27 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login | Intranet</title>
+    <title>Login | Intranet Corporativa</title>
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
 <body class="bg-slate-100 flex items-center justify-center h-screen">
-    <div class="bg-white p-8 rounded-2xl shadow-xl w-full max-w-md">
+    <div class="bg-white p-8 rounded-2xl shadow-xl w-full max-w-md border border-slate-200">
         <div class="text-center mb-8">
-            <h1 class="text-3xl font-bold text-slate-800">Bienvenido</h1>
-            <p class="text-slate-500">Acceso Privado</p>
+            <h1 class="text-3xl font-bold text-slate-800 tracking-tight">Bienvenido</h1>
+            <p class="text-slate-500">Acceso Privado Intranet</p>
         </div>
         <div class="space-y-4">
-            <input type="email" id="email" placeholder="Email" class="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 outline-none">
-            <input type="password" id="password" placeholder="Contraseña" class="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 outline-none">
-            <button id="btnLogin" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 rounded-lg transition shadow-lg">Entrar</button>
+            <div>
+                <label class="block text-sm font-medium text-slate-700 mb-1">Correo Electrónico</label>
+                <input type="email" id="email" placeholder="ejemplo@correo.com" class="w-full px-4 py-2 border rounded-xl focus:ring-2 focus:ring-blue-500 outline-none transition">
+            </div>
+            <div>
+                <label class="block text-sm font-medium text-slate-700 mb-1">Contraseña</label>
+                <input type="password" id="password" placeholder="••••••••" class="w-full px-4 py-2 border rounded-xl focus:ring-2 focus:ring-blue-500 outline-none transition">
+            </div>
+            <button id="btnLogin" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 rounded-xl transition shadow-lg shadow-blue-200">
+                Entrar al Sistema
+            </button>
         </div>
     </div>
 
@@ -49,9 +57,11 @@
                     window.location.href = "dashboard.html";
                 } else {
                     await auth.signOut();
-                    alert("No estás autorizado para entrar.");
+                    alert("No tienes permisos de acceso. Contacta al administrador.");
                 }
-            } catch (e) { alert("Credenciales incorrectas"); }
+            } catch (e) {
+                alert("Error: Usuario o contraseña incorrectos.");
+            }
         };
     </script>
 </body>
