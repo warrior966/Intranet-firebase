@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard | Intranet</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        .tab-content { display: none; }
+        .active-tab { display: block; }
+        .nav-active { border-bottom: 3px solid #2563eb; color: #2563eb; }
+    </style>
+</head>
+<body class="bg-slate-50 min-h-screen">
+    <header class="bg-white shadow-sm px-6 py-4 flex justify-between items-center">
+        <h2 class="text-xl font-bold text-blue-600 tracking-tight">INTRANET</h2>
+        <div class="flex items-center gap-4 text-sm font-medium">
+            <span id="user-name" class="text-slate-600"></span>
+            <button id="btnLogout" class="text-red-500 hover:underline">Cerrar Sesión</button>
+        </div>
+    </header>
+
+    <nav class="flex justify-center bg-white border-b sticky top-0 z-10">
+        <button onclick="showTab('enlaces')" class="tab-btn px-6 py-4 font-semibold nav-active">Enlaces</button>
+        <button onclick="showTab('chat')" class="tab-btn px-6 py-4 font-semibold">Chat</button>
+        <button id="admin-tab" onclick="showTab('admin')" class="tab-btn px-6 py-4 font-semibold hidden text-purple-600">Panel Admin</button>
+    </nav>
+
+    <main class="max-w-4xl mx-auto p-6">
+        <section id="enlaces" class="tab-content active-tab space-y-4">
+            <h3 class="text-2xl font-bold text-slate-800">Enlaces de Interés</h3>
+            <div id="links-container" class="grid grid-cols-1 md:grid-cols-2 gap-4"></div>
+        </section>
+
+        <section id="chat" class="tab-content space-y-4">
+            <h3 class="text-2xl font-bold text-slate-800">Chat del Equipo</h3>
+            <div class="bg-white rounded-2xl shadow-sm border overflow-hidden flex flex-col h-[500px]">
+                <div id="chat-messages" class="flex-1 p-4 overflow-y-auto space-y-3 bg-slate-50"></div>
+                <div class="p-4 bg-white border-t flex gap-2">
+                    <input type="text" id="chat-input" placeholder="Escribe un mensaje..." class="flex-1 px-4 py-2 border rounded-xl outline-none focus:ring-2 focus:ring-blue-500">
+                    <button id="btnSend" class="bg-blue-600 text-white px-6 py-2 rounded-xl font-bold hover:bg-blue-700 transition">Enviar</button>
+                </div>
+            </div>
+        </section>
+
+        <section id="admin" class="tab-content space-y-6">
+            <h3 class="text-2xl font-bold text-purple-700">Administración</h3>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div class="bg-white p-6 rounded-2xl shadow-sm border">
+                    <h4 class="font-bold mb-4 text-slate-700">Autorizar Usuario</h4>
+                    <div class="flex gap-2 mb-4">
+                        <input type="email" id="new-user-email" class="flex-1 px-3 py-2 border rounded-lg" placeholder="email@empresa.com">
+                        <button id="btnAddUser" class="bg-purple-600 text-white px-4 py-2 rounded-lg font-bold">Añadir</button>
+                    </div>
+                    <ul id="user-list" class="divide-y max-h-60 overflow-y-auto"></ul>
+                </div>
+                <div class="bg-white p-6 rounded-2xl shadow-sm border space-y-4 text-sm">
+                    <h4 class="font-bold text-slate-700">Gestión de Contenido</h4>
+                    <input type="text" id="link-title" class="w-full px-3 py-2 border rounded-lg" placeholder="Título Enlace">
+                    <input type="url" id="link-url" class="w-full px-3 py-2 border rounded-lg" placeholder="URL (https://...)">
+                    <button id="btnSaveLink" class="w-full bg-slate-800 text-white py-2 rounded-lg font-bold">Publicar Enlace</button>
+                    <hr>
+                    <button onclick="clearChat()" class="w-full text-red-600 font-bold py-2 border border-red-200 rounded-lg hover:bg-red-50">🗑 Vaciar Chat</button>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+        import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+        import { getFirestore, collection, addDoc, query, orderBy, onSnapshot, serverTimestamp, doc, setDoc, deleteDoc, getDocs } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyAJd8syrMPQunEfBTH0sf9Khj_mSTkWeto",
+            authDomain: "intranet-ba388.firebaseapp.com",
+            projectId: "intranet-ba388",
+            storageBucket: "intranet-ba388.firebasestorage.app",
+            messagingSenderId: "104208696906",
+            appId: "1:104208696906:web:1dc5ddf05d28d3eb89c8b3"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getFirestore(app);
+        const adminEmails = ["admin@tuempresa.com"]; // CAMBIA ESTO
+
+        window.showTab = (tabId) => {
+            document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active-tab'));
+            document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('nav-active'));
+            document.getElementById(tabId).classList.add('active-tab');
+            event.target.classList.add('nav-active');
+        };
+
+        onAuthStateChanged(auth, (user) => {
+            if (user) {
+                document.getElementById('user-name').innerText = user.email;
+                if (adminEmails.includes(user.email)) document.getElementById('admin-tab').classList.remove('hidden');
+            } else { window.location.href = "index.html"; }
+        });
+
+        document.getElementById('btnLogout').onclick = () => signOut(auth);
+
+        // --- CHAT ---
+        const chatRef = collection(db, "chat");
+        document.getElementById('btnSend').onclick = async () => {
+            const input = document.getElementById('chat-input');
+            if(input.value.trim()) {
+                await addDoc(chatRef, { text: input.value, user: auth.currentUser.email, timestamp: serverTimestamp() });
+                input.value = "";
+            }
+        };
+        onSnapshot(query(chatRef, orderBy("timestamp", "asc")), (snap) => {
+            const box = document.getElementById('chat-messages');
+            box.innerHTML = snap.docs.map(d => `<div class="bg-white p-3 rounded-xl shadow-sm border-l-4 border-blue-500 text-sm"><p class="font-bold text-blue-600 mb-1">${d.data().user}</p><p class="text-slate-700">${d.data().text}</p></div>`).join('');
+            box.scrollTop = box.scrollHeight;
+        });
+
+        // --- ENLACES ---
+        const linksRef = collection(db, "enlaces");
+        document.getElementById('btnSaveLink').onclick = async () => {
+            const t = document.getElementById('link-title'), u = document.getElementById('link-url');
+            if(t.value && u.value) {
+                await addDoc(linksRef, { nombre: t.value, url: u.value, createdAt: serverTimestamp() });
+                t.value = ""; u.value = "";
+            }
+        };
+        onSnapshot(query(linksRef, orderBy("createdAt", "desc")), (snap) => {
+            document.getElementById('links-container').innerHTML = snap.docs.map(d => `
+                <a href="${d.data().url}" target="_blank" class="bg-white p-5 rounded-2xl shadow-sm hover:shadow-md transition border border-slate-100 flex justify-between items-center group">
+                    <span class="font-bold text-slate-700 group-hover:text-blue-600 transition">${d.data().nombre}</span>
+                    <span class="text-blue-500 font-black">→</span>
+                </a>
+            `).join('');
+        });
+
+        // --- ADMIN ---
+        document.getElementById('btnAddUser').onclick = async () => {
+            const email = document.getElementById('new-user-email').value.toLowerCase().trim();
+            if(email) await setDoc(doc(db, "usuarios_autorizados", email), { email, addedAt: serverTimestamp() });
+        };
+        onSnapshot(collection(db, "usuarios_autorizados"), (snap) => {
+            document.getElementById('user-list').innerHTML = snap.docs.map(d => `
+                <li class="py-3 flex justify-between items-center text-sm">
+                    <span class="text-slate-600">${d.id}</span>
+                    <button onclick="removeUser('${d.id}')" class="text-red-500 font-bold hover:bg-red-50 px-2 py-1 rounded">Quitar</button>
+                </li>
+            `).join('');
+        });
+        window.removeUser = async (id) => { if(confirm("¿Quitar acceso?")) await deleteDoc(doc(db, "usuarios_autorizados", id)); };
+        window.clearChat = async () => { if(confirm("¿Borrar historial?")) (await getDocs(chatRef)).forEach(d => deleteDoc(d.ref)); };
+    </script>
+</body>
+</html>
