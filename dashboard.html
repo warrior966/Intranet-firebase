@@ -12,6 +12,9 @@
         #toast-container { position: fixed; bottom: 20px; right: 20px; z-index: 100; }
         .toast { animation: slideIn 0.3s ease-out; }
         @keyframes slideIn { from { transform: translateX(100%); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
+        /* Scrollbar suave para el chat */
+        .custom-scroll::-webkit-scrollbar { width: 4px; }
+        .custom-scroll::-webkit-scrollbar-thumb { background: #e2e8f0; border-radius: 10px; }
     </style>
 </head>
 <body class="bg-slate-50 min-h-screen font-sans">
@@ -21,46 +24,41 @@
     <header class="bg-white shadow-sm px-6 py-4 flex justify-between items-center sticky top-0 z-20">
         <h2 class="text-xl font-black text-blue-600 tracking-tighter italic uppercase">Intranet 2.0</h2>
         <div class="flex items-center gap-4 text-sm font-medium">
-            <span id="user-name" class="text-slate-600 bg-slate-100 px-3 py-1 rounded-full text-xs font-bold">Cargando...</span>
-            <button id="btnLogout" class="text-red-500 hover:text-red-700 transition font-bold uppercase text-[10px]">Cerrar Sesión</button>
+            <span id="user-name" class="text-slate-600 bg-slate-100 px-3 py-1 rounded-full text-xs font-bold uppercase">Cargando...</span>
+            <button id="btnLogout" class="text-red-500 hover:text-red-700 transition font-bold uppercase text-[10px]">Salir</button>
         </div>
     </header>
 
     <nav class="flex justify-center bg-white border-b sticky top-14 z-10 overflow-x-auto">
         <button onclick="showTab('inicio')" class="tab-btn px-6 py-4 font-bold text-[11px] uppercase tracking-widest nav-active">Inicio</button>
         <button onclick="showTab('enlaces')" class="tab-btn px-6 py-4 font-bold text-[11px] uppercase tracking-widest">Enlaces</button>
-        <button onclick="showTab('chat')" class="tab-btn px-6 py-4 font-bold text-[11px] uppercase tracking-widest">Chat Grupal</button>
-        <button onclick="showTab('cuenta')" class="tab-btn px-6 py-4 font-bold text-[11px] uppercase tracking-widest">Mi Cuenta</button>
+        <button onclick="showTab('chat')" class="tab-btn px-6 py-4 font-bold text-[11px] uppercase tracking-widest">Grupo</button>
+        <button onclick="showTab('mensajes')" class="tab-btn px-6 py-4 font-bold text-[11px] uppercase tracking-widest text-emerald-600">Privados</button>
+        <button onclick="showTab('cuenta')" class="tab-btn px-6 py-4 font-bold text-[11px] uppercase tracking-widest">Mi Perfil</button>
         <button id="admin-tab" onclick="showTab('admin')" class="tab-btn px-6 py-4 font-bold text-[11px] uppercase tracking-widest hidden text-purple-600">Admin</button>
     </nav>
 
-    <main class="max-w-5xl mx-auto p-6">
+    <main class="max-w-5xl mx-auto p-4 md:p-6">
         
         <section id="inicio" class="tab-content active-tab space-y-6">
             <div class="bg-gradient-to-br from-slate-900 to-slate-800 p-8 rounded-[2rem] text-white shadow-2xl">
-                <h3 id="welcome-text" class="text-3xl font-black mb-2">...</h3>
+                <h3 id="welcome-text" class="text-3xl font-black mb-2 italic tracking-tighter">HOLA</h3>
                 <p id="current-date" class="text-[10px] font-bold text-blue-400 uppercase tracking-[0.2em]"></p>
             </div>
-
             <div id="announcement-container" class="hidden">
-                <div class="bg-amber-50 border border-amber-100 p-6 rounded-[2rem] shadow-sm relative overflow-hidden">
-                    <div class="flex items-center gap-2 mb-2">
-                        <span class="w-2 h-2 bg-amber-500 rounded-full animate-ping"></span>
-                        <h4 id="announcement-title" class="font-black text-amber-800 uppercase text-[10px] tracking-widest"></h4>
-                    </div>
+                <div class="bg-amber-50 border border-amber-100 p-6 rounded-[2rem] shadow-sm relative">
+                    <h4 id="announcement-title" class="font-black text-amber-800 uppercase text-[10px] tracking-widest mb-1">AVISO</h4>
                     <p id="announcement-body" class="text-amber-900 text-sm font-medium"></p>
                 </div>
             </div>
         </section>
         
         <section id="enlaces" class="tab-content space-y-6">
-            <h3 class="text-2xl font-black text-slate-800 uppercase italic">Recursos</h3>
             <div class="bg-blue-600 p-6 rounded-[2rem] shadow-lg space-y-4">
-                <p class="text-white text-xs font-bold uppercase tracking-widest">Compartir enlace:</p>
                 <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
-                    <input type="text" id="link-title" class="px-4 py-3 border-none rounded-2xl outline-none text-sm font-bold bg-white/10 text-white placeholder-white/50" placeholder="Nombre">
-                    <input type="url" id="link-url" class="px-4 py-3 border-none rounded-2xl outline-none text-sm font-bold bg-white/10 text-white placeholder-white/50" placeholder="https://...">
-                    <button id="btnSaveLink" class="bg-white text-blue-600 px-6 py-3 rounded-2xl font-black text-xs uppercase hover:bg-slate-100 transition">Añadir</button>
+                    <input type="text" id="link-title" class="px-4 py-3 rounded-2xl outline-none text-sm font-bold bg-white/10 text-white placeholder-white/50" placeholder="Nombre">
+                    <input type="url" id="link-url" class="px-4 py-3 rounded-2xl outline-none text-sm font-bold bg-white/10 text-white placeholder-white/50" placeholder="https://...">
+                    <button id="btnSaveLink" class="bg-white text-blue-600 px-6 py-3 rounded-2xl font-black text-xs uppercase">Añadir</button>
                 </div>
             </div>
             <div id="links-container" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 font-bold"></div>
@@ -68,10 +66,35 @@
 
         <section id="chat" class="tab-content space-y-4">
             <div class="bg-white rounded-[2rem] shadow-xl border border-slate-200 overflow-hidden flex flex-col h-[65vh] max-w-2xl mx-auto">
-                <div id="chat-messages" class="flex-1 p-6 overflow-y-auto space-y-4 bg-slate-50"></div>
+                <div id="chat-messages" class="flex-1 p-6 overflow-y-auto space-y-4 bg-slate-50 custom-scroll"></div>
                 <div class="p-4 bg-white border-t flex gap-2">
-                    <input type="text" id="chat-input" placeholder="Escribe al grupo..." class="flex-1 px-4 py-3 border rounded-2xl outline-none bg-slate-100 text-sm font-bold">
+                    <input type="text" id="chat-input" placeholder="Mensaje al grupo..." class="flex-1 px-4 py-3 border rounded-2xl outline-none bg-slate-100 text-sm font-bold">
                     <button id="btnSend" class="bg-blue-600 text-white px-6 py-3 rounded-2xl font-black text-xs uppercase">Enviar</button>
+                </div>
+            </div>
+        </section>
+
+        <section id="mensajes" class="tab-content h-[75vh]">
+            <div class="bg-white rounded-[2rem] shadow-2xl border border-slate-200 h-full flex overflow-hidden">
+                <div class="w-1/3 border-r flex flex-col bg-slate-50">
+                    <div class="p-4 border-b bg-white">
+                        <h3 class="font-black text-[10px] uppercase tracking-widest text-slate-400">Contactos</h3>
+                    </div>
+                    <div id="contacts-list" class="flex-1 overflow-y-auto custom-scroll">
+                        </div>
+                </div>
+                <div class="flex-1 flex flex-col bg-white">
+                    <div id="chat-header" class="p-4 border-b flex items-center gap-3 bg-white">
+                        <div class="w-8 h-8 bg-emerald-100 rounded-full flex items-center justify-center text-emerald-600 font-bold text-xs uppercase" id="current-chat-avatar">?</div>
+                        <span id="current-chat-name" class="font-black text-xs uppercase text-slate-700 tracking-tight">Selecciona un chat</span>
+                    </div>
+                    <div id="private-messages-container" class="flex-1 p-6 overflow-y-auto space-y-4 bg-slate-50 custom-scroll">
+                        <p class="text-center text-slate-300 font-bold uppercase text-[10px] mt-20">Elige a alguien para hablar</p>
+                    </div>
+                    <div class="p-4 bg-white border-t flex gap-2">
+                        <input type="text" id="private-input" placeholder="Escribe un mensaje privado..." class="flex-1 px-4 py-3 border rounded-2xl outline-none bg-slate-100 text-sm font-bold" disabled>
+                        <button id="btnSendPrivate" class="bg-emerald-600 text-white px-6 py-3 rounded-2xl font-black text-xs uppercase opacity-50 cursor-not-allowed" disabled>Enviar</button>
+                    </div>
                 </div>
             </div>
         </section>
@@ -83,54 +106,43 @@
                     <label>Nombre Público</label>
                     <div class="flex gap-2">
                         <input type="text" id="display-name-input" class="flex-1 px-4 py-3 border rounded-2xl bg-slate-50 outline-none" placeholder="Nombre">
-                        <button id="btnUpdateProfile" class="bg-blue-600 text-white px-5 py-2 rounded-2xl font-black text-[10px]">Actualizar</button>
+                        <button id="btnUpdateProfile" class="bg-blue-600 text-white px-5 py-2 rounded-2xl font-black text-[10px]">OK</button>
                     </div>
                 </div>
                 <div class="space-y-2 text-xs font-black uppercase tracking-widest text-slate-400 pt-4 border-t">
                     <label>Nueva contraseña</label>
                     <input type="password" id="new-password-input" class="w-full px-4 py-3 border rounded-2xl bg-slate-50 outline-none mb-2" placeholder="••••••">
-                    <button id="btnUpdatePass" class="w-full bg-slate-800 text-white py-3 rounded-2xl font-black text-xs">Guardar Clave</button>
+                    <button id="btnUpdatePass" class="w-full bg-slate-800 text-white py-3 rounded-2xl font-black text-xs uppercase">Guardar Clave</button>
                 </div>
             </div>
         </section>
 
         <section id="admin" class="tab-content space-y-6">
-            <h3 class="text-2xl font-black text-purple-700 uppercase italic">Panel Admin</h3>
-            <div class="grid grid-cols-1 gap-6">
-                
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <div class="bg-white p-6 rounded-[2rem] shadow-sm border border-purple-100 space-y-4">
-                        <h4 class="font-black text-slate-800 text-[10px] uppercase tracking-widest">📢 Anuncio Global</h4>
-                        <input type="text" id="admin-ann-title" class="w-full px-4 py-2 border rounded-xl outline-none" placeholder="Título">
-                        <textarea id="admin-ann-body" rows="2" class="w-full px-4 py-2 border rounded-xl outline-none text-sm" placeholder="Mensaje..."></textarea>
-                        <div class="flex gap-2">
-                            <button id="btnSaveAnn" class="flex-1 bg-purple-600 text-white py-2 rounded-xl font-black text-[10px] uppercase">Publicar</button>
-                            <button id="btnDeleteAnn" class="bg-slate-200 text-slate-600 px-4 py-2 rounded-xl font-black text-[10px] uppercase">Quitar</button>
-                        </div>
-                    </div>
-                    <div class="bg-white p-6 rounded-[2rem] shadow-sm border border-purple-100">
-                        <h4 class="font-black text-slate-800 text-[10px] uppercase mb-4 tracking-widest text-purple-600">👤 Usuarios</h4>
-                        <div class="flex gap-2 mb-4">
-                            <input type="email" id="new-user-email" class="flex-1 px-3 py-2 border rounded-xl outline-none text-sm font-bold" placeholder="email@empresa.com">
-                            <button id="btnAddUser" class="bg-purple-600 text-white px-4 py-2 rounded-xl font-black text-[10px] uppercase">Añadir</button>
-                        </div>
-                        <ul id="user-list" class="divide-y max-h-40 overflow-y-auto"></ul>
-                    </div>
-                </div>
-
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div class="bg-white p-6 rounded-[2rem] shadow-sm border border-purple-100 space-y-4">
-                    <h4 class="font-black text-slate-800 text-[10px] uppercase tracking-widest text-purple-600">🗑 Gestión de Contenidos</h4>
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                        <div class="bg-slate-50 p-4 rounded-2xl">
-                            <p class="text-[9px] font-black uppercase text-slate-400 mb-3">Eliminar Enlaces</p>
-                            <ul id="admin-links-list" class="divide-y space-y-2 max-h-60 overflow-y-auto"></ul>
-                        </div>
-                        <div class="flex flex-col justify-center">
-                            <button onclick="clearChat()" class="w-full bg-red-100 text-red-600 font-black py-4 text-xs uppercase rounded-2xl hover:bg-red-200 transition">Borrar Chat Grupal</button>
-                        </div>
+                    <h4 class="font-black text-slate-800 text-[10px] uppercase tracking-widest">📢 Anuncio</h4>
+                    <input type="text" id="admin-ann-title" class="w-full px-4 py-2 border rounded-xl outline-none" placeholder="Título">
+                    <textarea id="admin-ann-body" rows="2" class="w-full px-4 py-2 border rounded-xl outline-none text-sm" placeholder="Mensaje..."></textarea>
+                    <div class="flex gap-2">
+                        <button id="btnSaveAnn" class="flex-1 bg-purple-600 text-white py-2 rounded-xl font-black text-[10px] uppercase">Publicar</button>
+                        <button id="btnDeleteAnn" class="bg-slate-200 text-slate-600 px-4 py-2 rounded-xl font-black text-[10px] uppercase">Quitar</button>
                     </div>
                 </div>
-
+                <div class="bg-white p-6 rounded-[2rem] shadow-sm border border-purple-100">
+                    <h4 class="font-black text-slate-800 text-[10px] uppercase mb-4 tracking-widest text-purple-600">👤 Usuarios</h4>
+                    <div class="flex gap-2 mb-4">
+                        <input type="email" id="new-user-email" class="flex-1 px-3 py-2 border rounded-xl outline-none text-sm font-bold" placeholder="email@empresa.com">
+                        <button id="btnAddUser" class="bg-purple-600 text-white px-4 py-2 rounded-xl font-black text-[10px] uppercase">Añadir</button>
+                    </div>
+                    <ul id="user-list" class="divide-y max-h-40 overflow-y-auto"></ul>
+                </div>
+                <div class="md:col-span-2 bg-white p-6 rounded-[2rem] shadow-sm border border-purple-100">
+                    <h4 class="font-black text-slate-800 text-[10px] uppercase tracking-widest text-purple-600 mb-4">🗑 Gestión</h4>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <ul id="admin-links-list" class="divide-y max-h-40 overflow-y-auto bg-slate-50 p-4 rounded-2xl"></ul>
+                        <button onclick="clearChat()" class="h-16 bg-red-100 text-red-600 font-black text-xs uppercase rounded-2xl">Borrar Chat Grupo</button>
+                    </div>
+                </div>
             </div>
         </section>
     </main>
@@ -138,7 +150,7 @@
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
         import { getAuth, onAuthStateChanged, signOut, updateProfile, updatePassword } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
-        import { getFirestore, collection, addDoc, query, orderBy, onSnapshot, serverTimestamp, doc, setDoc, deleteDoc, getDocs } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+        import { getFirestore, collection, addDoc, query, orderBy, onSnapshot, serverTimestamp, doc, setDoc, deleteDoc, getDocs, where, or } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
         const firebaseConfig = {
             apiKey: "AIzaSyAJd8syrMPQunEfBTH0sf9Khj_mSTkWeto",
@@ -153,7 +165,8 @@
         const auth = getAuth(app);
         const db = getFirestore(app);
         
-        const adminEmails = ["alvaro.guerreromaldonado@alumno.fomento.edu", "u6282143640@gmail.com"]; // CAMBIA ESTO
+        const adminEmails = ["u6282143640@gmail.com", "alvaro.guerreromaldonado@alumno.fomento.edu"]; 
+        let activeChatEmail = null;
 
         const showToast = (msg, type = "success") => {
             const container = document.getElementById('toast-container');
@@ -218,35 +231,87 @@
             box.scrollTop = box.scrollHeight;
         });
 
-        // --- ENLACES ---
-        const linksRef = collection(db, "enlaces");
-        document.getElementById('btnSaveLink').onclick = async () => {
-            const t = document.getElementById('link-title'), u = document.getElementById('link-url');
-            if(t.value && u.value) {
-                await addDoc(linksRef, { nombre: t.value, url: u.value, user: auth.currentUser.email, createdAt: serverTimestamp() });
-                t.value = ""; u.value = ""; showToast("Enlace publicado");
+        // --- CHAT PRIVADO (LÓGICA WHATSAPP) ---
+        const privRef = collection(db, "chats_privados");
+
+        // Cargar lista de contactos (Usuarios autorizados)
+        onSnapshot(collection(db, "usuarios_autorizados"), (snap) => {
+            const list = document.getElementById('contacts-list');
+            list.innerHTML = snap.docs
+                .filter(d => d.id !== auth.currentUser?.email) // No mostrarse a uno mismo
+                .map(d => `
+                <div onclick="openPrivateChat('${d.id}')" class="p-4 border-b hover:bg-white cursor-pointer transition flex items-center gap-3">
+                    <div class="w-10 h-10 bg-slate-200 rounded-full flex items-center justify-center text-[10px] font-black uppercase text-slate-500">${d.id.substring(0,2)}</div>
+                    <div class="flex flex-col overflow-hidden">
+                        <span class="font-bold text-[11px] text-slate-700 truncate uppercase">${d.id}</span>
+                        <span class="text-[9px] text-slate-400 font-bold uppercase">En línea</span>
+                    </div>
+                </div>`).join('');
+        });
+
+        window.openPrivateChat = (email) => {
+            activeChatEmail = email;
+            document.getElementById('current-chat-name').innerText = email;
+            document.getElementById('current-chat-avatar').innerText = email.substring(0,2);
+            document.getElementById('private-input').disabled = false;
+            document.getElementById('btnSendPrivate').disabled = false;
+            document.getElementById('btnSendPrivate').classList.remove('opacity-50', 'cursor-not-allowed');
+            
+            // Cargar mensajes exclusivos
+            const q = query(privRef, orderBy("timestamp", "asc"));
+            onSnapshot(q, (snap) => {
+                if(activeChatEmail !== email) return;
+                const filtered = snap.docs.filter(d => 
+                    (d.data().sender === auth.currentUser.email && d.data().receiver === email) || 
+                    (d.data().sender === email && d.data().receiver === auth.currentUser.email)
+                );
+                const box = document.getElementById('private-messages-container');
+                box.innerHTML = filtered.map(d => `
+                    <div class="flex flex-col ${d.data().sender === auth.currentUser.email ? 'items-end' : 'items-start'}">
+                        <div class="${d.data().sender === auth.currentUser.email ? 'bg-emerald-600 text-white' : 'bg-slate-200 text-slate-800'} p-3 rounded-2xl shadow-sm max-w-[85%]">
+                            <p class="text-sm font-bold tracking-tight">${d.data().text}</p>
+                        </div>
+                    </div>`).join('');
+                box.scrollTop = box.scrollHeight;
+            });
+        };
+
+        document.getElementById('btnSendPrivate').onclick = async () => {
+            const input = document.getElementById('private-input');
+            if(input.value.trim() && activeChatEmail) {
+                await addDoc(privRef, {
+                    sender: auth.currentUser.email,
+                    receiver: activeChatEmail,
+                    text: input.value,
+                    timestamp: serverTimestamp()
+                });
+                input.value = "";
             }
         };
-        onSnapshot(query(linksRef, orderBy("createdAt", "desc")), (snap) => {
-            const html = snap.docs.map(d => `
-                <a href="${d.data().url}" target="_blank" class="bg-white p-5 rounded-[2rem] shadow-sm border border-slate-100 flex flex-col gap-1 group">
+
+        // --- ENLACES ---
+        onSnapshot(query(collection(db, "enlaces"), orderBy("createdAt", "desc")), (snap) => {
+            document.getElementById('links-container').innerHTML = snap.docs.map(d => `
+                <a href="${d.data().url}" target="_blank" class="bg-white p-5 rounded-[2rem] shadow-sm border border-slate-100 flex flex-col gap-1 group transition hover:shadow-lg">
                     <span class="font-black text-slate-800 group-hover:text-blue-600 uppercase text-[9px] tracking-widest">${d.data().nombre}</span>
                     <span class="text-[8px] text-slate-400 italic">Por: ${d.data().user || 'Sistema'}</span>
                 </a>`).join('');
-            document.getElementById('links-container').innerHTML = html;
-            
-            // Lista para Admin
             document.getElementById('admin-links-list').innerHTML = snap.docs.map(d => `
                 <li class="flex justify-between items-center py-2 text-[10px] font-bold">
-                    <span class="truncate w-32">${d.data().nombre}</span>
+                    <span class="truncate w-32 uppercase">${d.data().nombre}</span>
                     <button onclick="deleteLink('${d.id}')" class="text-red-500 uppercase">Borrar</button>
                 </li>`).join('');
         });
 
-        window.deleteLink = async (id) => { 
-            await deleteDoc(doc(db, "enlaces", id));
-            showToast("Enlace eliminado");
+        document.getElementById('btnSaveLink').onclick = async () => {
+            const t = document.getElementById('link-title'), u = document.getElementById('link-url');
+            if(t.value && u.value) {
+                await addDoc(collection(db, "enlaces"), { nombre: t.value, url: u.value, user: auth.currentUser.email, createdAt: serverTimestamp() });
+                t.value = ""; u.value = ""; showToast("Enlace añadido");
+            }
         };
+
+        window.deleteLink = async (id) => { await deleteDoc(doc(db, "enlaces", id)); showToast("Enlace borrado"); };
 
         // --- MI CUENTA ---
         document.getElementById('btnUpdateProfile').onclick = async () => {
