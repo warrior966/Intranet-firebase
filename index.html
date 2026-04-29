@@ -3,34 +3,54 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login | Intranet Corporativa</title>
+    <title>Login | Intranet 2.0</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body { background: radial-gradient(circle at top right, #f8fafc, #e2e8f0); }
+        .glass { background: rgba(255, 255, 255, 0.8); backdrop-filter: blur(10px); }
+        #toast-container { position: fixed; top: 20px; right: 20px; z-index: 100; }
+    </style>
 </head>
-<body class="bg-slate-100 flex items-center justify-center h-screen">
-    <div class="bg-white p-8 rounded-2xl shadow-xl w-full max-w-md border border-slate-200">
-        <div class="text-center mb-8">
-            <h1 class="text-3xl font-bold text-slate-800 tracking-tight">Bienvenido</h1>
-            <p class="text-slate-500">Acceso Privado Intranet</p>
+<body class="min-h-screen flex items-center justify-center p-4">
+
+    <div id="toast-container"></div>
+
+    <div class="glass w-full max-w-md p-8 rounded-[2.5rem] shadow-2xl border border-white space-y-8">
+        <div class="text-center">
+            <h1 class="text-4xl font-black text-blue-600 italic tracking-tighter uppercase mb-2">Intranet 2.0</h1>
+            <p class="text-[10px] font-bold text-slate-400 uppercase tracking-[0.3em]">Acceso Restringido</p>
         </div>
+
         <div class="space-y-4">
-            <div>
-                <label class="block text-sm font-medium text-slate-700 mb-1">Correo Electrónico</label>
-                <input type="email" id="email" placeholder="ejemplo@correo.com" class="w-full px-4 py-2 border rounded-xl focus:ring-2 focus:ring-blue-500 outline-none transition">
+            <div class="space-y-1">
+                <label class="text-[9px] font-black uppercase text-slate-500 ml-4 tracking-widest">Email Corporativo</label>
+                <input type="email" id="email" class="w-full px-6 py-4 rounded-2xl bg-white border-none outline-none focus:ring-2 focus:ring-blue-500 shadow-sm font-bold text-sm" placeholder="usuario@empresa.com">
             </div>
-            <div>
-                <label class="block text-sm font-medium text-slate-700 mb-1">Contraseña</label>
-                <input type="password" id="password" placeholder="••••••••" class="w-full px-4 py-2 border rounded-xl focus:ring-2 focus:ring-blue-500 outline-none transition">
+            <div class="space-y-1">
+                <label class="text-[9px] font-black uppercase text-slate-500 ml-4 tracking-widest">Contraseña</label>
+                <input type="password" id="password" class="w-full px-6 py-4 rounded-2xl bg-white border-none outline-none focus:ring-2 focus:ring-blue-500 shadow-sm font-bold text-sm" placeholder="••••••••">
             </div>
-            <button id="btnLogin" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 rounded-xl transition shadow-lg shadow-blue-200">
+            
+            <button id="btnLogin" class="w-full bg-slate-900 text-white py-4 rounded-2xl font-black text-xs uppercase tracking-widest hover:bg-blue-600 transition-all transform active:scale-95 shadow-lg">
                 Entrar al Sistema
             </button>
         </div>
+
+        <div id="login-info" class="p-4 bg-blue-50 rounded-2xl border border-blue-100 hidden">
+            <p class="text-[9px] text-blue-600 font-bold uppercase text-center leading-relaxed">
+                Verificando credenciales y estado de presencia...
+            </p>
+        </div>
+
+        <footer class="text-center">
+            <p class="text-[8px] font-bold text-slate-400 uppercase tracking-widest">© 2024 Sistema de Gestión Interna</p>
+        </footer>
     </div>
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-        import { getAuth, signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
-        import { getFirestore, doc, getDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+        import { getAuth, signInWithEmailAndPassword, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+        import { getFirestore, doc, getDoc, setDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
         const firebaseConfig = {
             apiKey: "AIzaSyAJd8syrMPQunEfBTH0sf9Khj_mSTkWeto",
@@ -45,22 +65,61 @@
         const auth = getAuth(app);
         const db = getFirestore(app);
 
+        const showToast = (msg, type = "error") => {
+            const container = document.getElementById('toast-container');
+            const toast = document.createElement('div');
+            toast.className = `mb-2 px-6 py-3 rounded-xl shadow-lg text-white font-bold text-[10px] uppercase tracking-widest transition-all ${type === 'error' ? 'bg-red-500' : 'bg-emerald-500'}`;
+            toast.innerText = msg;
+            container.appendChild(toast);
+            setTimeout(() => { toast.style.opacity = '0'; setTimeout(() => toast.remove(), 500); }, 3000);
+        };
+
+        // Redirección automática si ya está logueado
+        onAuthStateChanged(auth, (user) => {
+            if (user) window.location.href = "dashboard.html";
+        });
+
         document.getElementById('btnLogin').onclick = async () => {
             const email = document.getElementById('email').value.toLowerCase().trim();
             const pass = document.getElementById('password').value;
+            const infoBox = document.getElementById('login-info');
+
+            if (!email || !pass) {
+                showToast("Completa todos los campos");
+                return;
+            }
+
+            infoBox.classList.remove('hidden');
 
             try {
-                const userCredential = await signInWithEmailAndPassword(auth, email, pass);
+                // 1. Verificar si el email está en la lista blanca (autorizados)
                 const userDoc = await getDoc(doc(db, "usuarios_autorizados", email));
-
-                if (userDoc.exists()) {
-                    window.location.href = "dashboard.html";
-                } else {
-                    await auth.signOut();
-                    alert("No tienes permisos de acceso. Contacta al administrador.");
+                
+                if (!userDoc.exists()) {
+                    showToast("Email no autorizado por el administrador");
+                    infoBox.classList.add('hidden');
+                    return;
                 }
-            } catch (e) {
-                alert("Error: Usuario o contraseña incorrectos.");
+
+                // 2. Intentar Login
+                await signInWithEmailAndPassword(auth, email, pass);
+                
+                // 3. Establecer presencia Online inmediatamente al entrar
+                await setDoc(doc(db, "presencia", email), {
+                    online: true,
+                    lastChanged: serverTimestamp()
+                }, { merge: true });
+
+                window.location.href = "dashboard.html";
+
+            } catch (error) {
+                console.error(error);
+                infoBox.classList.add('hidden');
+                if (error.code === 'auth/invalid-credential') {
+                    showToast("Contraseña incorrecta");
+                } else {
+                    showToast("Error de conexión");
+                }
             }
         };
     </script>
