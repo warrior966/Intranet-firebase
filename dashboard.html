@@ -12,7 +12,6 @@
         #toast-container { position: fixed; bottom: 20px; right: 20px; z-index: 100; }
         .toast { animation: slideIn 0.3s ease-out; }
         @keyframes slideIn { from { transform: translateX(100%); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
-        /* Scrollbar suave para el chat */
         .custom-scroll::-webkit-scrollbar { width: 4px; }
         .custom-scroll::-webkit-scrollbar-thumb { background: #e2e8f0; border-radius: 10px; }
     </style>
@@ -42,11 +41,20 @@
         
         <section id="inicio" class="tab-content active-tab space-y-6">
             <div class="bg-gradient-to-br from-slate-900 to-slate-800 p-8 rounded-[2rem] text-white shadow-2xl">
-                <h3 id="welcome-text" class="text-3xl font-black mb-2 italic tracking-tighter">HOLA</h3>
-                <p id="current-date" class="text-[10px] font-bold text-blue-400 uppercase tracking-[0.2em]"></p>
+                <h3 id="welcome-text" class="text-3xl font-black mb-2 italic tracking-tighter text-blue-400">HOLA</h3>
+                <p id="current-date" class="text-[10px] font-bold text-slate-400 uppercase tracking-[0.2em]"></p>
             </div>
+
+            <div id="unread-panel" class="bg-white border border-emerald-100 p-6 rounded-[2rem] shadow-sm hidden">
+                <h4 class="font-black text-emerald-600 uppercase text-[10px] tracking-widest mb-4 flex items-center gap-2">
+                    <span class="w-2 h-2 bg-emerald-500 rounded-full animate-pulse"></span>
+                    Mensajes No Leídos
+                </h4>
+                <div id="unread-list" class="space-y-3"></div>
+            </div>
+
             <div id="announcement-container" class="hidden">
-                <div class="bg-amber-50 border border-amber-100 p-6 rounded-[2rem] shadow-sm relative">
+                <div class="bg-amber-50 border border-amber-100 p-6 rounded-[2rem] shadow-sm">
                     <h4 id="announcement-title" class="font-black text-amber-800 uppercase text-[10px] tracking-widest mb-1">AVISO</h4>
                     <p id="announcement-body" class="text-amber-900 text-sm font-medium"></p>
                 </div>
@@ -80,17 +88,17 @@
                     <div class="p-4 border-b bg-white">
                         <h3 class="font-black text-[10px] uppercase tracking-widest text-slate-400">Contactos</h3>
                     </div>
-                    <div id="contacts-list" class="flex-1 overflow-y-auto custom-scroll">
-                        </div>
+                    <div id="contacts-list" class="flex-1 overflow-y-auto custom-scroll"></div>
                 </div>
                 <div class="flex-1 flex flex-col bg-white">
                     <div id="chat-header" class="p-4 border-b flex items-center gap-3 bg-white">
                         <div class="w-8 h-8 bg-emerald-100 rounded-full flex items-center justify-center text-emerald-600 font-bold text-xs uppercase" id="current-chat-avatar">?</div>
-                        <span id="current-chat-name" class="font-black text-xs uppercase text-slate-700 tracking-tight">Selecciona un chat</span>
+                        <div class="flex flex-col">
+                            <span id="current-chat-name" class="font-black text-xs uppercase text-slate-700 tracking-tight">Selecciona un chat</span>
+                            <span id="current-chat-status" class="text-[8px] font-bold uppercase text-slate-400">---</span>
+                        </div>
                     </div>
-                    <div id="private-messages-container" class="flex-1 p-6 overflow-y-auto space-y-4 bg-slate-50 custom-scroll">
-                        <p class="text-center text-slate-300 font-bold uppercase text-[10px] mt-20">Elige a alguien para hablar</p>
-                    </div>
+                    <div id="private-messages-container" class="flex-1 p-6 overflow-y-auto space-y-4 bg-slate-50 custom-scroll"></div>
                     <div class="p-4 bg-white border-t flex gap-2">
                         <input type="text" id="private-input" placeholder="Escribe un mensaje privado..." class="flex-1 px-4 py-3 border rounded-2xl outline-none bg-slate-100 text-sm font-bold" disabled>
                         <button id="btnSendPrivate" class="bg-emerald-600 text-white px-6 py-3 rounded-2xl font-black text-xs uppercase opacity-50 cursor-not-allowed" disabled>Enviar</button>
@@ -120,7 +128,7 @@
         <section id="admin" class="tab-content space-y-6">
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div class="bg-white p-6 rounded-[2rem] shadow-sm border border-purple-100 space-y-4">
-                    <h4 class="font-black text-slate-800 text-[10px] uppercase tracking-widest">📢 Anuncio</h4>
+                    <h4 class="font-black text-slate-800 text-[10px] uppercase tracking-widest text-purple-600">📢 Anuncio</h4>
                     <input type="text" id="admin-ann-title" class="w-full px-4 py-2 border rounded-xl outline-none" placeholder="Título">
                     <textarea id="admin-ann-body" rows="2" class="w-full px-4 py-2 border rounded-xl outline-none text-sm" placeholder="Mensaje..."></textarea>
                     <div class="flex gap-2">
@@ -136,13 +144,6 @@
                     </div>
                     <ul id="user-list" class="divide-y max-h-40 overflow-y-auto"></ul>
                 </div>
-                <div class="md:col-span-2 bg-white p-6 rounded-[2rem] shadow-sm border border-purple-100">
-                    <h4 class="font-black text-slate-800 text-[10px] uppercase tracking-widest text-purple-600 mb-4">🗑 Gestión</h4>
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                        <ul id="admin-links-list" class="divide-y max-h-40 overflow-y-auto bg-slate-50 p-4 rounded-2xl"></ul>
-                        <button onclick="clearChat()" class="h-16 bg-red-100 text-red-600 font-black text-xs uppercase rounded-2xl">Borrar Chat Grupo</button>
-                    </div>
-                </div>
             </div>
         </section>
     </main>
@@ -150,7 +151,7 @@
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
         import { getAuth, onAuthStateChanged, signOut, updateProfile, updatePassword } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
-        import { getFirestore, collection, addDoc, query, orderBy, onSnapshot, serverTimestamp, doc, setDoc, deleteDoc, getDocs, where, or } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+        import { getFirestore, collection, addDoc, query, orderBy, onSnapshot, serverTimestamp, doc, setDoc, deleteDoc, getDocs, updateDoc, where } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
         const firebaseConfig = {
             apiKey: "AIzaSyAJd8syrMPQunEfBTH0sf9Khj_mSTkWeto",
@@ -187,7 +188,17 @@
             });
         };
 
-        onAuthStateChanged(auth, (user) => {
+        // --- GESTIÓN DE PRESENCIA ---
+        const setOnlineStatus = async (status) => {
+            if (auth.currentUser) {
+                await setDoc(doc(db, "presencia", auth.currentUser.email), {
+                    online: status,
+                    lastChanged: serverTimestamp()
+                }, { merge: true });
+            }
+        };
+
+        onAuthStateChanged(auth, async (user) => {
             if (user) {
                 const name = user.displayName || user.email.split('@')[0];
                 document.getElementById('user-name').innerText = name;
@@ -195,61 +206,91 @@
                 document.getElementById('welcome-text').innerText = `HOLA, ${name.toUpperCase()}`;
                 document.getElementById('current-date').innerText = new Date().toLocaleDateString('es-ES', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
                 if (adminEmails.includes(user.email)) document.getElementById('admin-tab').classList.remove('hidden');
-            } else { window.location.href = "index.html"; }
-        });
-
-        document.getElementById('btnLogout').onclick = () => signOut(auth);
-
-        // --- ANUNCIOS ---
-        onSnapshot(doc(db, "configuracion", "anuncio"), (doc) => {
-            const container = document.getElementById('announcement-container');
-            if (doc.exists()) {
-                container.classList.remove('hidden');
-                document.getElementById('announcement-title').innerText = doc.data().titulo;
-                document.getElementById('announcement-body').innerText = doc.data().mensaje;
-            } else { container.classList.add('hidden'); }
-        });
-
-        // --- CHAT GRUPAL ---
-        const chatRef = collection(db, "chat");
-        document.getElementById('btnSend').onclick = async () => {
-            const input = document.getElementById('chat-input');
-            if(input.value.trim()) {
-                await addDoc(chatRef, { text: input.value, user: auth.currentUser.displayName || auth.currentUser.email.split('@')[0], timestamp: serverTimestamp() });
-                input.value = "";
+                
+                // Marcar como ONLINE
+                await setOnlineStatus(true);
+                // Escuchar no leídos
+                listenToUnreadMessages(user.email);
+            } else { 
+                window.location.href = "index.html"; 
             }
-        };
-        onSnapshot(query(chatRef, orderBy("timestamp", "asc")), (snap) => {
-            const box = document.getElementById('chat-messages');
-            box.innerHTML = snap.docs.map(d => `
-                <div class="flex flex-col ${d.data().user === (auth.currentUser.displayName || auth.currentUser.email.split('@')[0]) ? 'items-end' : 'items-start'}">
-                    <div class="max-w-[85%] ${d.data().user === (auth.currentUser.displayName || auth.currentUser.email.split('@')[0]) ? 'bg-blue-600 text-white rounded-l-2xl rounded-tr-2xl' : 'bg-white text-slate-800 rounded-r-2xl rounded-tl-2xl border'} p-3 shadow-sm">
-                        <p class="text-[8px] font-black opacity-50 uppercase mb-1">${d.data().user}</p>
-                        <p class="text-sm font-bold tracking-tight">${d.data().text}</p>
-                    </div>
-                </div>`).join('');
-            box.scrollTop = box.scrollHeight;
         });
 
-        // --- CHAT PRIVADO (LÓGICA WHATSAPP) ---
-        const privRef = collection(db, "chats_privados");
+        // Marcar offline al cerrar
+        window.addEventListener('beforeunload', () => setOnlineStatus(false));
+        document.getElementById('btnLogout').onclick = async () => {
+            await setOnlineStatus(false);
+            signOut(auth);
+        };
 
-        // Cargar lista de contactos (Usuarios autorizados)
+        // --- MENSAJES NO LEÍDOS (LÓGICA INICIO) ---
+        const listenToUnreadMessages = (myEmail) => {
+            const q = query(collection(db, "chats_privados"), where("receiver", "==", myEmail), where("read", "==", false));
+            onSnapshot(q, (snap) => {
+                const unreadPanel = document.getElementById('unread-panel');
+                const unreadList = document.getElementById('unread-list');
+                const counts = {};
+
+                snap.docs.forEach(d => {
+                    const sender = d.data().sender;
+                    counts[sender] = (counts[sender] || 0) + 1;
+                });
+
+                const senders = Object.keys(counts);
+                if (senders.length > 0) {
+                    unreadPanel.classList.remove('hidden');
+                    unreadList.innerHTML = senders.map(s => `
+                        <div onclick="showTab('mensajes'); openPrivateChat('${s}')" class="flex justify-between items-center bg-emerald-50 p-3 rounded-2xl cursor-pointer hover:bg-emerald-100 transition">
+                            <span class="text-[10px] font-black uppercase text-emerald-800 truncate w-40">${s}</span>
+                            <span class="bg-emerald-500 text-white px-2 py-1 rounded-full text-[9px] font-bold">${counts[s]} nuevos</span>
+                        </div>
+                    `).join('');
+                } else {
+                    unreadPanel.classList.add('hidden');
+                }
+            });
+        };
+
+        // --- CHAT PRIVADO CORREGIDO CON PRESENCIA ---
+        const privRef = collection(db, "chats_privados");
+        
         onSnapshot(collection(db, "usuarios_autorizados"), (snap) => {
             const list = document.getElementById('contacts-list');
-            list.innerHTML = snap.docs
-                .filter(d => d.id !== auth.currentUser?.email) // No mostrarse a uno mismo
-                .map(d => `
-                <div onclick="openPrivateChat('${d.id}')" class="p-4 border-b hover:bg-white cursor-pointer transition flex items-center gap-3">
-                    <div class="w-10 h-10 bg-slate-200 rounded-full flex items-center justify-center text-[10px] font-black uppercase text-slate-500">${d.id.substring(0,2)}</div>
-                    <div class="flex flex-col overflow-hidden">
-                        <span class="font-bold text-[11px] text-slate-700 truncate uppercase">${d.id}</span>
-                        <span class="text-[9px] text-slate-400 font-bold uppercase">En línea</span>
-                    </div>
-                </div>`).join('');
+            const userEmails = snap.docs.map(d => d.id).filter(email => email !== auth.currentUser?.email);
+            
+            // Escuchar presencia de cada usuario
+            onSnapshot(collection(db, "presencia"), (presSnap) => {
+                const presenceData = {};
+                presSnap.docs.forEach(d => presenceData[d.id] = d.data().online);
+
+                list.innerHTML = userEmails.map(email => {
+                    const isOnline = presenceData[email] || false;
+                    return `
+                    <div onclick="openPrivateChat('${email}')" class="p-4 border-b hover:bg-white cursor-pointer transition flex items-center gap-3">
+                        <div class="relative">
+                            <div class="w-10 h-10 bg-slate-200 rounded-full flex items-center justify-center text-[10px] font-black uppercase text-slate-500">${email.substring(0,2)}</div>
+                            <div class="absolute bottom-0 right-0 w-3 h-3 rounded-full border-2 border-white ${isOnline ? 'bg-emerald-500' : 'bg-slate-400'}"></div>
+                        </div>
+                        <div class="flex flex-col overflow-hidden">
+                            <span class="font-bold text-[11px] text-slate-700 truncate uppercase">${email}</span>
+                            <span class="text-[8px] font-black uppercase ${isOnline ? 'text-emerald-500' : 'text-slate-400'}">
+                                ${isOnline ? 'En línea' : 'Desconectado'}
+                            </span>
+                        </div>
+                    </div>`;
+                }).join('');
+
+                // Actualizar estado en la cabecera del chat abierto
+                if(activeChatEmail) {
+                    const isOnline = presenceData[activeChatEmail] || false;
+                    const statusEl = document.getElementById('current-chat-status');
+                    statusEl.innerText = isOnline ? 'En línea' : 'Desconectado';
+                    statusEl.className = `text-[8px] font-black uppercase ${isOnline ? 'text-emerald-500' : 'text-slate-400'}`;
+                }
+            });
         });
 
-        window.openPrivateChat = (email) => {
+        window.openPrivateChat = async (email) => {
             activeChatEmail = email;
             document.getElementById('current-chat-name').innerText = email;
             document.getElementById('current-chat-avatar').innerText = email.substring(0,2);
@@ -257,9 +298,13 @@
             document.getElementById('btnSendPrivate').disabled = false;
             document.getElementById('btnSendPrivate').classList.remove('opacity-50', 'cursor-not-allowed');
             
-            // Cargar mensajes exclusivos
-            const q = query(privRef, orderBy("timestamp", "asc"));
-            onSnapshot(q, (snap) => {
+            // Marcar mensajes como LEÍDOS
+            const qUnread = query(privRef, where("sender", "==", email), where("receiver", "==", auth.currentUser.email), where("read", "==", false));
+            const toMark = await getDocs(qUnread);
+            toMark.forEach(d => updateDoc(d.ref, { read: true }));
+
+            // Escuchar chat
+            onSnapshot(query(privRef, orderBy("timestamp", "asc")), (snap) => {
                 if(activeChatEmail !== email) return;
                 const filtered = snap.docs.filter(d => 
                     (d.data().sender === auth.currentUser.email && d.data().receiver === email) || 
@@ -283,26 +328,41 @@
                     sender: auth.currentUser.email,
                     receiver: activeChatEmail,
                     text: input.value,
+                    read: false,
                     timestamp: serverTimestamp()
                 });
                 input.value = "";
             }
         };
 
-        // --- ENLACES ---
+        // --- CHAT GRUPAL (Sin cambios) ---
+        document.getElementById('btnSend').onclick = async () => {
+            const input = document.getElementById('chat-input');
+            if(input.value.trim()) {
+                await addDoc(collection(db, "chat"), { text: input.value, user: auth.currentUser.displayName || auth.currentUser.email.split('@')[0], timestamp: serverTimestamp() });
+                input.value = "";
+            }
+        };
+        onSnapshot(query(collection(db, "chat"), orderBy("timestamp", "asc")), (snap) => {
+            const box = document.getElementById('chat-messages');
+            box.innerHTML = snap.docs.map(d => `
+                <div class="flex flex-col ${d.data().user === (auth.currentUser.displayName || auth.currentUser.email.split('@')[0]) ? 'items-end' : 'items-start'}">
+                    <div class="max-w-[85%] ${d.data().user === (auth.currentUser.displayName || auth.currentUser.email.split('@')[0]) ? 'bg-blue-600 text-white rounded-l-2xl rounded-tr-2xl' : 'bg-white text-slate-800 rounded-r-2xl rounded-tl-2xl border'} p-3 shadow-sm">
+                        <p class="text-[8px] font-black opacity-50 uppercase mb-1">${d.data().user}</p>
+                        <p class="text-sm font-bold tracking-tight">${d.data().text}</p>
+                    </div>
+                </div>`).join('');
+            box.scrollTop = box.scrollHeight;
+        });
+
+        // --- ENLACES Y OTROS ---
         onSnapshot(query(collection(db, "enlaces"), orderBy("createdAt", "desc")), (snap) => {
             document.getElementById('links-container').innerHTML = snap.docs.map(d => `
                 <a href="${d.data().url}" target="_blank" class="bg-white p-5 rounded-[2rem] shadow-sm border border-slate-100 flex flex-col gap-1 group transition hover:shadow-lg">
                     <span class="font-black text-slate-800 group-hover:text-blue-600 uppercase text-[9px] tracking-widest">${d.data().nombre}</span>
-                    <span class="text-[8px] text-slate-400 italic">Por: ${d.data().user || 'Sistema'}</span>
+                    <span class="text-[8px] text-slate-400 italic">Por: ${d.data().user}</span>
                 </a>`).join('');
-            document.getElementById('admin-links-list').innerHTML = snap.docs.map(d => `
-                <li class="flex justify-between items-center py-2 text-[10px] font-bold">
-                    <span class="truncate w-32 uppercase">${d.data().nombre}</span>
-                    <button onclick="deleteLink('${d.id}')" class="text-red-500 uppercase">Borrar</button>
-                </li>`).join('');
         });
-
         document.getElementById('btnSaveLink').onclick = async () => {
             const t = document.getElementById('link-title'), u = document.getElementById('link-url');
             if(t.value && u.value) {
@@ -310,46 +370,14 @@
                 t.value = ""; u.value = ""; showToast("Enlace añadido");
             }
         };
-
-        window.deleteLink = async (id) => { await deleteDoc(doc(db, "enlaces", id)); showToast("Enlace borrado"); };
-
-        // --- MI CUENTA ---
-        document.getElementById('btnUpdateProfile').onclick = async () => {
-            await updateProfile(auth.currentUser, { displayName: document.getElementById('display-name-input').value });
-            showToast("Nombre actualizado");
-            setTimeout(() => location.reload(), 1000);
-        };
-        document.getElementById('btnUpdatePass').onclick = async () => {
-            const newPass = document.getElementById('new-password-input').value;
-            if (newPass.length >= 6) {
-                await updatePassword(auth.currentUser, newPass);
-                showToast("Clave cambiada");
-                document.getElementById('new-password-input').value = "";
-            } else { showToast("Mínimo 6 caracteres", "error"); }
-        };
-
-        // --- ADMIN OTROS ---
-        document.getElementById('btnSaveAnn').onclick = async () => {
-            await setDoc(doc(db, "configuracion", "anuncio"), { titulo: document.getElementById('admin-ann-title').value, mensaje: document.getElementById('admin-ann-body').value });
-            showToast("Anuncio publicado");
-        };
-        document.getElementById('btnDeleteAnn').onclick = async () => {
-            await deleteDoc(doc(db, "configuracion", "anuncio"));
-            showToast("Anuncio eliminado");
-        };
-        document.getElementById('btnAddUser').onclick = async () => {
-            const email = document.getElementById('new-user-email').value.toLowerCase().trim();
-            if(email) { await setDoc(doc(db, "usuarios_autorizados", email), { email }); showToast("Autorizado"); }
-        };
-        onSnapshot(collection(db, "usuarios_autorizados"), (snap) => {
-            document.getElementById('user-list').innerHTML = snap.docs.map(d => `
-                <li class="py-2 flex justify-between items-center text-[10px] font-black uppercase text-slate-400">
-                    <span>${d.id}</span>
-                    <button onclick="removeUser('${d.id}')" class="text-red-400">Quitar</button>
-                </li>`).join('');
+        onSnapshot(doc(db, "configuracion", "anuncio"), (doc) => {
+            const container = document.getElementById('announcement-container');
+            if (doc.exists()) {
+                container.classList.remove('hidden');
+                document.getElementById('announcement-title').innerText = doc.data().titulo;
+                document.getElementById('announcement-body').innerText = doc.data().mensaje;
+            } else { container.classList.add('hidden'); }
         });
-        window.removeUser = async (id) => { await deleteDoc(doc(db, "usuarios_autorizados", id)); showToast("Acceso quitado"); };
-        window.clearChat = async () => { (await getDocs(chatRef)).forEach(d => deleteDoc(d.ref)); showToast("Chat vaciado"); };
     </script>
 </body>
 </html>
