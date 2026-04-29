@@ -9,121 +9,134 @@
         .tab-content { display: none; }
         .active-tab { display: block; }
         .nav-active { border-bottom: 3px solid #2563eb; color: #2563eb; background-color: #f8fafc; }
+        /* Animación para las notificaciones */
+        #toast-container { position: fixed; bottom: 20px; right: 20px; z-index: 100; }
+        .toast { animation: slideIn 0.3s ease-out; }
+        @keyframes slideIn { from { transform: translateX(100%); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
     </style>
 </head>
-<body class="bg-slate-50 min-h-screen">
+<body class="bg-slate-50 min-h-screen font-sans">
+
+    <div id="toast-container"></div>
+
     <header class="bg-white shadow-sm px-6 py-4 flex justify-between items-center sticky top-0 z-20">
-        <h2 class="text-xl font-black text-blue-600 tracking-tighter italic">MI INTRANET</h2>
+        <h2 class="text-xl font-black text-blue-600 tracking-tighter italic uppercase">Intranet 2.0</h2>
         <div class="flex items-center gap-4 text-sm font-medium">
-            <span id="user-name" class="text-slate-600 bg-slate-100 px-3 py-1 rounded-full text-xs">Cargando...</span>
-            <button id="btnLogout" class="text-red-500 hover:text-red-700 transition font-bold">Salir</button>
+            <span id="user-name" class="text-slate-600 bg-slate-100 px-3 py-1 rounded-full text-xs font-bold">Cargando...</span>
+            <button id="btnLogout" class="text-red-500 hover:text-red-700 transition font-bold uppercase text-[10px]">Cerrar Sesión</button>
         </div>
     </header>
 
     <nav class="flex justify-center bg-white border-b sticky top-14 z-10 overflow-x-auto">
-        <button onclick="showTab('inicio')" class="tab-btn px-6 py-4 font-bold text-sm uppercase tracking-wider nav-active">Inicio</button>
-        <button onclick="showTab('enlaces')" class="tab-btn px-6 py-4 font-bold text-sm uppercase tracking-wider">Enlaces</button>
-        <button onclick="showTab('chat')" class="tab-btn px-6 py-4 font-bold text-sm uppercase tracking-wider">Chat</button>
-        <button onclick="showTab('cuenta')" class="tab-btn px-6 py-4 font-bold text-sm uppercase tracking-wider">Mi Cuenta</button>
-        <button id="admin-tab" onclick="showTab('admin')" class="tab-btn px-6 py-4 font-bold text-sm uppercase tracking-wider hidden text-purple-600">Admin</button>
+        <button onclick="showTab('inicio')" class="tab-btn px-6 py-4 font-bold text-[11px] uppercase tracking-widest nav-active">Inicio</button>
+        <button onclick="showTab('enlaces')" class="tab-btn px-6 py-4 font-bold text-[11px] uppercase tracking-widest">Enlaces</button>
+        <button onclick="showTab('chat')" class="tab-btn px-6 py-4 font-bold text-[11px] uppercase tracking-widest">Chat Grupal</button>
+        <button onclick="showTab('privado')" class="tab-btn px-6 py-4 font-bold text-[11px] uppercase tracking-widest text-emerald-600">Mensajes</button>
+        <button onclick="showTab('cuenta')" class="tab-btn px-6 py-4 font-bold text-[11px] uppercase tracking-widest">Mi Cuenta</button>
+        <button id="admin-tab" onclick="showTab('admin')" class="tab-btn px-6 py-4 font-bold text-[11px] uppercase tracking-widest hidden text-purple-600">Admin</button>
     </nav>
 
     <main class="max-w-5xl mx-auto p-6">
         
         <section id="inicio" class="tab-content active-tab space-y-6">
-            <div class="bg-gradient-to-r from-blue-600 to-blue-400 p-8 rounded-3xl text-white shadow-lg">
-                <h3 id="welcome-text" class="text-3xl font-bold italic mb-2">¡Hola!</h3>
-                <p class="opacity-90 font-medium text-sm md:text-base">Bienvenido al panel central de la intranet.</p>
-                <p id="current-date" class="mt-4 text-xs font-bold bg-blue-700 bg-opacity-30 inline-block px-3 py-1 rounded-lg"></p>
+            <div class="bg-gradient-to-br from-slate-900 to-slate-800 p-8 rounded-[2rem] text-white shadow-2xl">
+                <h3 id="welcome-text" class="text-3xl font-black mb-2">...</h3>
+                <p id="current-date" class="text-[10px] font-bold text-blue-400 uppercase tracking-[0.2em]"></p>
             </div>
 
             <div id="announcement-container" class="hidden">
-                <div class="bg-amber-50 border-l-4 border-amber-400 p-6 rounded-2xl shadow-sm">
-                    <div class="flex items-center gap-3 mb-2">
-                        <span class="text-amber-600">⚠️</span>
-                        <h4 id="announcement-title" class="font-black text-amber-800 uppercase text-xs tracking-widest">AVISO IMPORTANTE</h4>
+                <div class="bg-amber-50 border border-amber-100 p-6 rounded-[2rem] shadow-sm relative overflow-hidden">
+                    <div class="flex items-center gap-2 mb-2">
+                        <span class="w-2 h-2 bg-amber-500 rounded-full animate-ping"></span>
+                        <h4 id="announcement-title" class="font-black text-amber-800 uppercase text-[10px] tracking-widest"></h4>
                     </div>
-                    <p id="announcement-body" class="text-amber-900 text-sm font-medium leading-relaxed"></p>
-                </div>
-            </div>
-
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <div class="bg-white p-6 rounded-3xl shadow-sm border border-slate-100">
-                    <h4 class="font-black text-slate-800 uppercase text-[10px] tracking-widest mb-4">Sistemas</h4>
-                    <div class="flex items-center gap-3 text-green-500 font-bold text-sm">
-                        <div class="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
-                        Servicios Activos
-                    </div>
-                </div>
-                <div class="bg-white p-6 rounded-3xl shadow-sm border border-slate-100 flex items-center justify-center">
-                    <button onclick="showTab('chat')" class="bg-slate-800 text-white px-6 py-3 rounded-2xl font-bold hover:bg-black transition w-full text-sm">Abrir Chat Grupal</button>
+                    <p id="announcement-body" class="text-amber-900 text-sm font-medium"></p>
                 </div>
             </div>
         </section>
         
-        <section id="enlaces" class="tab-content space-y-4">
-            <h3 class="text-2xl font-bold text-slate-800">Enlaces Rápidos</h3>
-            <div id="links-container" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4"></div>
+        <section id="enlaces" class="tab-content space-y-6">
+            <div class="flex justify-between items-center">
+                <h3 class="text-2xl font-black text-slate-800 uppercase italic">Recursos</h3>
+            </div>
+            
+            <div class="bg-blue-600 p-6 rounded-[2rem] shadow-lg space-y-4">
+                <p class="text-white text-xs font-bold uppercase tracking-widest">Añadir nuevo recurso:</p>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
+                    <input type="text" id="link-title" class="px-4 py-3 border-none rounded-2xl outline-none text-sm font-bold bg-white/10 text-white placeholder-white/50" placeholder="Nombre del sitio">
+                    <input type="url" id="link-url" class="px-4 py-3 border-none rounded-2xl outline-none text-sm font-bold bg-white/10 text-white placeholder-white/50" placeholder="https://...">
+                    <button id="btnSaveLink" class="bg-white text-blue-600 px-6 py-3 rounded-2xl font-black text-xs uppercase hover:bg-slate-100 transition">Compartir</button>
+                </div>
+            </div>
+
+            <div id="links-container" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 font-bold"></div>
         </section>
 
         <section id="chat" class="tab-content space-y-4">
-            <div class="bg-white rounded-3xl shadow-xl border border-slate-200 overflow-hidden flex flex-col h-[65vh] max-w-2xl mx-auto">
+            <div class="bg-white rounded-[2rem] shadow-xl border border-slate-200 overflow-hidden flex flex-col h-[65vh] max-w-2xl mx-auto">
                 <div id="chat-messages" class="flex-1 p-6 overflow-y-auto space-y-4 bg-slate-50"></div>
                 <div class="p-4 bg-white border-t flex gap-2">
-                    <input type="text" id="chat-input" placeholder="Mensaje..." class="flex-1 px-4 py-3 border rounded-2xl outline-none focus:ring-2 focus:ring-blue-500 bg-slate-50 text-sm font-medium">
-                    <button id="btnSend" class="bg-blue-600 text-white px-6 py-3 rounded-2xl font-bold hover:bg-blue-700 transition">Enviar</button>
+                    <input type="text" id="chat-input" placeholder="Escribe al grupo..." class="flex-1 px-4 py-3 border rounded-2xl outline-none bg-slate-100 text-sm font-bold">
+                    <button id="btnSend" class="bg-blue-600 text-white px-6 py-3 rounded-2xl font-black text-xs uppercase">Enviar</button>
+                </div>
+            </div>
+        </section>
+
+        <section id="privado" class="tab-content space-y-4">
+            <div class="max-w-2xl mx-auto space-y-4">
+                <h3 class="text-2xl font-black text-slate-800 uppercase italic">Mensajería Privada</h3>
+                <div class="bg-emerald-600 p-4 rounded-3xl flex gap-2">
+                    <input type="email" id="target-user-email" class="flex-1 px-4 py-2 rounded-2xl outline-none text-sm font-bold border-none" placeholder="Email del compañero...">
+                </div>
+                <div class="bg-white rounded-[2rem] shadow-xl border border-slate-200 overflow-hidden flex flex-col h-[50vh]">
+                    <div id="private-chat-messages" class="flex-1 p-6 overflow-y-auto space-y-4 bg-slate-50 text-xs">
+                        <p class="text-center text-slate-400 font-bold uppercase py-10">Escribe un email arriba para iniciar chat</p>
+                    </div>
+                    <div class="p-4 bg-white border-t flex gap-2">
+                        <input type="text" id="private-chat-input" placeholder="Mensaje privado..." class="flex-1 px-4 py-3 border rounded-2xl outline-none bg-slate-100 text-sm font-bold">
+                        <button id="btnSendPrivate" class="bg-emerald-600 text-white px-6 py-3 rounded-2xl font-black text-xs uppercase">Enviar</button>
+                    </div>
                 </div>
             </div>
         </section>
 
         <section id="cuenta" class="tab-content space-y-6 max-w-xl mx-auto">
-            <h3 class="text-2xl font-bold text-slate-800">Configuración</h3>
-            <div class="bg-white p-8 rounded-3xl shadow-lg border border-slate-100 space-y-6 font-medium">
-                <div class="space-y-2">
-                    <label class="text-[10px] font-black text-slate-400 uppercase tracking-widest">Nombre</label>
+            <h3 class="text-2xl font-black text-slate-800 uppercase italic">Mi Perfil</h3>
+            <div class="bg-white p-8 rounded-[2rem] shadow-lg border border-slate-100 space-y-6">
+                <div class="space-y-2 text-xs font-black uppercase tracking-widest text-slate-400">
+                    <label>Tu nombre en la plataforma</label>
                     <div class="flex gap-2">
-                        <input type="text" id="display-name-input" class="flex-1 px-4 py-2 border rounded-xl bg-slate-50 outline-none" placeholder="Tu nombre">
-                        <button id="btnUpdateProfile" class="bg-blue-600 text-white px-4 py-2 rounded-xl font-bold text-xs">OK</button>
+                        <input type="text" id="display-name-input" class="flex-1 px-4 py-3 border rounded-2xl bg-slate-50 outline-none" placeholder="Nombre">
+                        <button id="btnUpdateProfile" class="bg-blue-600 text-white px-5 py-2 rounded-2xl font-black text-[10px]">Actualizar</button>
                     </div>
                 </div>
-                <div class="space-y-2">
-                    <label class="text-[10px] font-black text-slate-400 uppercase tracking-widest">Nueva Contraseña</label>
-                    <input type="password" id="new-password-input" class="w-full px-4 py-2 border rounded-xl bg-slate-50 outline-none" placeholder="••••••">
-                    <button id="btnUpdatePass" class="w-full bg-slate-800 text-white py-3 rounded-xl font-bold text-sm">Cambiar Clave</button>
+                <div class="space-y-2 text-xs font-black uppercase tracking-widest text-slate-400 pt-4 border-t">
+                    <label>Nueva contraseña</label>
+                    <input type="password" id="new-password-input" class="w-full px-4 py-3 border rounded-2xl bg-slate-50 outline-none mb-2" placeholder="••••••">
+                    <button id="btnUpdatePass" class="w-full bg-slate-800 text-white py-3 rounded-2xl font-black text-xs">Guardar Nueva Clave</button>
                 </div>
             </div>
         </section>
 
         <section id="admin" class="tab-content space-y-6">
-            <h3 class="text-2xl font-bold text-purple-700">Panel Admin</h3>
+            <h3 class="text-2xl font-black text-purple-700 uppercase italic">Control Maestro</h3>
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <div class="bg-white p-6 rounded-2xl shadow-sm border border-purple-100 space-y-4">
-                    <h4 class="font-black text-slate-800 text-xs uppercase">📢 Publicar Anuncio en Inicio</h4>
-                    <input type="text" id="admin-ann-title" class="w-full px-4 py-2 border rounded-xl outline-none" placeholder="Título del aviso">
-                    <textarea id="admin-ann-body" rows="3" class="w-full px-4 py-2 border rounded-xl outline-none" placeholder="Mensaje del anuncio..."></textarea>
+                <div class="bg-white p-6 rounded-[2rem] shadow-sm border border-purple-100 space-y-4">
+                    <h4 class="font-black text-slate-800 text-[10px] uppercase tracking-widest">📢 Anuncio Global</h4>
+                    <input type="text" id="admin-ann-title" class="w-full px-4 py-2 border rounded-xl outline-none" placeholder="Título">
+                    <textarea id="admin-ann-body" rows="2" class="w-full px-4 py-2 border rounded-xl outline-none text-sm" placeholder="Mensaje..."></textarea>
                     <div class="flex gap-2">
-                        <button id="btnSaveAnn" class="flex-1 bg-purple-600 text-white py-2 rounded-xl font-bold text-xs">Publicar</button>
-                        <button id="btnDeleteAnn" class="bg-slate-200 text-slate-600 px-4 py-2 rounded-xl font-bold text-xs italic">Quitar</button>
+                        <button id="btnSaveAnn" class="flex-1 bg-purple-600 text-white py-2 rounded-xl font-black text-[10px] uppercase">Publicar</button>
+                        <button id="btnDeleteAnn" class="bg-slate-200 text-slate-600 px-4 py-2 rounded-xl font-black text-[10px] uppercase">Quitar</button>
                     </div>
                 </div>
-
-                <div class="bg-white p-6 rounded-2xl shadow-sm border border-purple-100">
-                    <h4 class="font-black text-slate-800 text-xs uppercase mb-4 text-purple-600">👤 Usuarios Autorizados</h4>
+                <div class="bg-white p-6 rounded-[2rem] shadow-sm border border-purple-100">
+                    <h4 class="font-black text-slate-800 text-[10px] uppercase mb-4 tracking-widest text-purple-600">👤 Gestión de Usuarios</h4>
                     <div class="flex gap-2 mb-4">
-                        <input type="email" id="new-user-email" class="flex-1 px-3 py-2 border rounded-xl outline-none" placeholder="email@empresa.com">
-                        <button id="btnAddUser" class="bg-purple-600 text-white px-4 py-2 rounded-xl font-bold text-xs">Añadir</button>
+                        <input type="email" id="new-user-email" class="flex-1 px-3 py-2 border rounded-xl outline-none text-sm font-bold" placeholder="email@empresa.com">
+                        <button id="btnAddUser" class="bg-purple-600 text-white px-4 py-2 rounded-xl font-black text-[10px] uppercase">Autorizar</button>
                     </div>
                     <ul id="user-list" class="divide-y max-h-40 overflow-y-auto"></ul>
-                </div>
-
-                <div class="bg-white p-6 rounded-2xl shadow-sm border space-y-4 md:col-span-2">
-                    <h4 class="font-black text-slate-800 text-xs uppercase">🔗 Gestión de Enlaces</h4>
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                        <input type="text" id="link-title" class="px-4 py-2 border rounded-xl outline-none" placeholder="Nombre">
-                        <input type="url" id="link-url" class="px-4 py-2 border rounded-xl outline-none" placeholder="https://...">
-                    </div>
-                    <button id="btnSaveLink" class="w-full bg-slate-800 text-white py-2 rounded-xl font-bold text-xs uppercase tracking-widest">Añadir Enlace</button>
-                    <button onclick="clearChat()" class="w-full text-red-500 font-bold py-2 text-xs uppercase hover:bg-red-50 rounded-xl transition">Borrar Historial Chat</button>
                 </div>
             </div>
         </section>
@@ -132,7 +145,7 @@
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
         import { getAuth, onAuthStateChanged, signOut, updateProfile, updatePassword } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
-        import { getFirestore, collection, addDoc, query, orderBy, onSnapshot, serverTimestamp, doc, setDoc, deleteDoc, getDocs } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+        import { getFirestore, collection, addDoc, query, orderBy, onSnapshot, serverTimestamp, doc, setDoc, deleteDoc, getDocs, where, or } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
         const firebaseConfig = {
             apiKey: "AIzaSyAJd8syrMPQunEfBTH0sf9Khj_mSTkWeto",
@@ -147,7 +160,18 @@
         const auth = getAuth(app);
         const db = getFirestore(app);
         
-        const adminEmails = ["alvaro.guerreromaldonado@alumno.fomento.edu", "u6282143640@gmail.com"]; // CAMBIA ESTO CON TU EMAIL
+        // --- CAMBIA ESTO ---
+        const adminEmails = ["u6282143640@gmail.com", "alvaro.guerreromaldonado@alumno.fomento.edu"]; 
+
+        // SISTEMA DE NOTIFICACIONES INTERNAS (TOAST)
+        const showToast = (msg, type = "success") => {
+            const container = document.getElementById('toast-container');
+            const toast = document.createElement('div');
+            toast.className = `toast mb-2 px-6 py-3 rounded-2xl shadow-lg text-white font-bold text-xs uppercase tracking-widest ${type === 'success' ? 'bg-blue-600' : 'bg-red-500'}`;
+            toast.innerText = msg;
+            container.appendChild(toast);
+            setTimeout(() => { toast.style.opacity = '0'; setTimeout(() => toast.remove(), 500); }, 3000);
+        };
 
         window.showTab = (tabId) => {
             document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active-tab'));
@@ -159,51 +183,30 @@
             });
         };
 
-        const updateWelcomeMessage = (name) => {
-            const hour = new Date().getHours();
-            let greet = hour < 12 ? "¡Buenos días" : hour < 20 ? "¡Buenas tardes" : "¡Buenas noches";
-            document.getElementById('welcome-text').innerText = `${greet}, ${name}!`;
-            document.getElementById('current-date').innerText = new Date().toLocaleDateString('es-ES', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
-        };
-
         onAuthStateChanged(auth, (user) => {
             if (user) {
                 const name = user.displayName || user.email.split('@')[0];
                 document.getElementById('user-name').innerText = name;
                 document.getElementById('display-name-input').value = user.displayName || "";
-                updateWelcomeMessage(name);
+                document.getElementById('welcome-text').innerText = `BIENVENIDO, ${name.toUpperCase()}`;
+                document.getElementById('current-date').innerText = new Date().toLocaleDateString('es-ES', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
                 if (adminEmails.includes(user.email)) document.getElementById('admin-tab').classList.remove('hidden');
             } else { window.location.href = "index.html"; }
         });
 
         document.getElementById('btnLogout').onclick = () => signOut(auth);
 
-        // --- LÓGICA ANUNCIOS (Firestore) ---
+        // --- ANUNCIOS ---
         onSnapshot(doc(db, "configuracion", "anuncio"), (doc) => {
+            const container = document.getElementById('announcement-container');
             if (doc.exists()) {
-                const data = doc.data();
-                document.getElementById('announcement-container').classList.remove('hidden');
-                document.getElementById('announcement-title').innerText = data.titulo;
-                document.getElementById('announcement-body').innerText = data.mensaje;
-            } else {
-                document.getElementById('announcement-container').classList.add('hidden');
-            }
+                container.classList.remove('hidden');
+                document.getElementById('announcement-title').innerText = doc.data().titulo;
+                document.getElementById('announcement-body').innerText = doc.data().mensaje;
+            } else { container.classList.add('hidden'); }
         });
 
-        document.getElementById('btnSaveAnn').onclick = async () => {
-            const tit = document.getElementById('admin-ann-title').value;
-            const msg = document.getElementById('admin-ann-body').value;
-            if(tit && msg) {
-                await setDoc(doc(db, "configuracion", "anuncio"), { titulo: tit, mensaje: msg, fecha: serverTimestamp() });
-                alert("Anuncio publicado");
-            }
-        };
-        document.getElementById('btnDeleteAnn').onclick = async () => {
-            await deleteDoc(doc(db, "configuracion", "anuncio"));
-            alert("Anuncio quitado");
-        };
-
-        // --- CHAT ---
+        // --- CHAT GRUPAL ---
         const chatRef = collection(db, "chat");
         document.getElementById('btnSend').onclick = async () => {
             const input = document.getElementById('chat-input');
@@ -218,26 +221,68 @@
                 <div class="flex flex-col ${d.data().user === (auth.currentUser.displayName || auth.currentUser.email.split('@')[0]) ? 'items-end' : 'items-start'}">
                     <div class="max-w-[85%] ${d.data().user === (auth.currentUser.displayName || auth.currentUser.email.split('@')[0]) ? 'bg-blue-600 text-white rounded-l-2xl rounded-tr-2xl' : 'bg-white text-slate-800 rounded-r-2xl rounded-tl-2xl border'} p-3 shadow-sm">
                         <p class="text-[8px] font-black opacity-50 uppercase mb-1">${d.data().user}</p>
-                        <p class="text-sm font-medium">${d.data().text}</p>
+                        <p class="text-sm font-bold tracking-tight">${d.data().text}</p>
                     </div>
                 </div>`).join('');
             box.scrollTop = box.scrollHeight;
         });
 
-        // --- ENLACES ---
+        // --- CHAT PRIVADO ---
+        const privRef = collection(db, "chats_privados");
+        document.getElementById('btnSendPrivate').onclick = async () => {
+            const target = document.getElementById('target-user-email').value.toLowerCase().trim();
+            const text = document.getElementById('private-chat-input').value;
+            if (target && text) {
+                await addDoc(privRef, {
+                    sender: auth.currentUser.email,
+                    receiver: target,
+                    text: text,
+                    timestamp: serverTimestamp()
+                });
+                document.getElementById('private-chat-input').value = "";
+                showToast("Mensaje enviado");
+            } else { showToast("Escribe un email y mensaje", "error"); }
+        };
+
+        // Escuchar mensajes privados (donde yo soy emisor o receptor)
+        onAuthStateChanged(auth, (user) => {
+            if(user) {
+                const q = query(privRef, or(where("sender", "==", user.email), where("receiver", "==", user.email)), orderBy("timestamp", "asc"));
+                onSnapshot(q, (snap) => {
+                    const box = document.getElementById('private-chat-messages');
+                    const target = document.getElementById('target-user-email').value.toLowerCase().trim();
+                    if(!target) return;
+                    
+                    const filtered = snap.docs.filter(d => 
+                        (d.data().sender === user.email && d.data().receiver === target) || 
+                        (d.data().sender === target && d.data().receiver === user.email)
+                    );
+
+                    box.innerHTML = filtered.length > 0 ? filtered.map(d => `
+                        <div class="flex flex-col ${d.data().sender === user.email ? 'items-end' : 'items-start'}">
+                            <div class="${d.data().sender === user.email ? 'bg-emerald-600 text-white' : 'bg-white border text-slate-800'} p-3 rounded-2xl shadow-sm max-w-[90%]">
+                                <p class="text-xs font-bold">${d.data().text}</p>
+                            </div>
+                        </div>`).join('') : '<p class="text-center text-slate-400 uppercase font-black py-10">Sin mensajes con este usuario</p>';
+                    box.scrollTop = box.scrollHeight;
+                });
+            }
+        });
+
+        // --- ENLACES (TODOS PUEDEN AÑADIR) ---
         const linksRef = collection(db, "enlaces");
         document.getElementById('btnSaveLink').onclick = async () => {
             const t = document.getElementById('link-title'), u = document.getElementById('link-url');
             if(t.value && u.value) {
-                await addDoc(linksRef, { nombre: t.value, url: u.value, createdAt: serverTimestamp() });
-                t.value = ""; u.value = "";
-            }
+                await addDoc(linksRef, { nombre: t.value, url: u.value, user: auth.currentUser.email, createdAt: serverTimestamp() });
+                t.value = ""; u.value = ""; showToast("Enlace compartido!");
+            } else { showToast("Rellena ambos campos", "error"); }
         };
         onSnapshot(query(linksRef, orderBy("createdAt", "desc")), (snap) => {
             document.getElementById('links-container').innerHTML = snap.docs.map(d => `
-                <a href="${d.data().url}" target="_blank" class="bg-white p-6 rounded-3xl shadow-sm hover:shadow-xl transition-all border border-slate-100 flex flex-col gap-1 group">
+                <a href="${d.data().url}" target="_blank" class="bg-white p-5 rounded-[2rem] shadow-sm hover:shadow-xl transition-all border border-slate-100 flex flex-col gap-1 group">
                     <span class="font-black text-slate-800 group-hover:text-blue-600 uppercase text-[9px] tracking-widest">${d.data().nombre}</span>
-                    <span class="text-xs text-slate-400 truncate font-medium italic">${d.data().url}</span>
+                    <span class="text-[9px] text-slate-400 italic">Por: ${d.data().user || 'Sistema'}</span>
                 </a>`).join('');
         });
 
@@ -245,34 +290,49 @@
         document.getElementById('btnUpdateProfile').onclick = async () => {
             try {
                 await updateProfile(auth.currentUser, { displayName: document.getElementById('display-name-input').value });
-                alert("Nombre actualizado");
-                location.reload();
-            } catch (e) { alert("Error"); }
+                showToast("Nombre actualizado");
+                setTimeout(() => location.reload(), 1000);
+            } catch (e) { showToast("Error al actualizar", "error"); }
         };
         document.getElementById('btnUpdatePass').onclick = async () => {
             const newPass = document.getElementById('new-password-input').value;
-            if (newPass.length < 6) return alert("Muy corta");
+            if (newPass.length < 6) return showToast("Mínimo 6 caracteres", "error");
             try {
                 await updatePassword(auth.currentUser, newPass);
-                alert("Hecho");
+                showToast("Contraseña cambiada");
                 document.getElementById('new-password-input').value = "";
-            } catch (e) { alert("Re-inicia sesión"); }
+            } catch (e) { showToast("Inicia sesión de nuevo", "error"); }
         };
 
-        // --- ADMIN USUARIOS ---
+        // --- ADMIN ---
+        document.getElementById('btnSaveAnn').onclick = async () => {
+            const tit = document.getElementById('admin-ann-title').value;
+            const msg = document.getElementById('admin-ann-body').value;
+            if(tit && msg) {
+                await setDoc(doc(db, "configuracion", "anuncio"), { titulo: tit, mensaje: msg });
+                showToast("Anuncio publicado");
+            }
+        };
+        document.getElementById('btnDeleteAnn').onclick = async () => {
+            await deleteDoc(doc(db, "configuracion", "anuncio"));
+            showToast("Anuncio eliminado");
+        };
         document.getElementById('btnAddUser').onclick = async () => {
             const email = document.getElementById('new-user-email').value.toLowerCase().trim();
-            if(email) await setDoc(doc(db, "usuarios_autorizados", email), { email, addedAt: serverTimestamp() });
+            if(email) {
+                await setDoc(doc(db, "usuarios_autorizados", email), { email });
+                showToast("Usuario autorizado");
+            }
         };
         onSnapshot(collection(db, "usuarios_autorizados"), (snap) => {
             document.getElementById('user-list').innerHTML = snap.docs.map(d => `
-                <li class="py-2 flex justify-between items-center text-[10px] font-bold uppercase">
-                    <span class="text-slate-400">${d.id}</span>
-                    <button onclick="removeUser('${d.id}')" class="text-red-400 hover:text-red-600">Revocar</button>
+                <li class="py-2 flex justify-between items-center text-[10px] font-black uppercase text-slate-400">
+                    <span>${d.id}</span>
+                    <button onclick="removeUser('${d.id}')" class="text-red-400">Revocar</button>
                 </li>`).join('');
         });
-        window.removeUser = async (id) => { if(confirm("¿Quitar?")) await deleteDoc(doc(db, "usuarios_autorizados", id)); };
-        window.clearChat = async () => { if(confirm("¿Borrar?")) (await getDocs(chatRef)).forEach(d => deleteDoc(d.ref)); };
+        window.removeUser = async (id) => { if(confirm("¿Quitar?")) { await deleteDoc(doc(db, "usuarios_autorizados", id)); showToast("Acceso revocado"); } };
+        window.clearChat = async () => { if(confirm("¿Borrar?")) { (await getDocs(chatRef)).forEach(d => deleteDoc(d.ref)); showToast("Chat borrado"); } };
     </script>
 </body>
 </html>
