@@ -9,7 +9,6 @@
         .tab-content { display: none; }
         .active-tab { display: block; }
         .nav-active { border-bottom: 3px solid #2563eb; color: #2563eb; background-color: #f8fafc; }
-        /* Animación para las notificaciones */
         #toast-container { position: fixed; bottom: 20px; right: 20px; z-index: 100; }
         .toast { animation: slideIn 0.3s ease-out; }
         @keyframes slideIn { from { transform: translateX(100%); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
@@ -31,7 +30,6 @@
         <button onclick="showTab('inicio')" class="tab-btn px-6 py-4 font-bold text-[11px] uppercase tracking-widest nav-active">Inicio</button>
         <button onclick="showTab('enlaces')" class="tab-btn px-6 py-4 font-bold text-[11px] uppercase tracking-widest">Enlaces</button>
         <button onclick="showTab('chat')" class="tab-btn px-6 py-4 font-bold text-[11px] uppercase tracking-widest">Chat Grupal</button>
-        <button onclick="showTab('privado')" class="tab-btn px-6 py-4 font-bold text-[11px] uppercase tracking-widest text-emerald-600">Mensajes</button>
         <button onclick="showTab('cuenta')" class="tab-btn px-6 py-4 font-bold text-[11px] uppercase tracking-widest">Mi Cuenta</button>
         <button id="admin-tab" onclick="showTab('admin')" class="tab-btn px-6 py-4 font-bold text-[11px] uppercase tracking-widest hidden text-purple-600">Admin</button>
     </nav>
@@ -56,19 +54,15 @@
         </section>
         
         <section id="enlaces" class="tab-content space-y-6">
-            <div class="flex justify-between items-center">
-                <h3 class="text-2xl font-black text-slate-800 uppercase italic">Recursos</h3>
-            </div>
-            
+            <h3 class="text-2xl font-black text-slate-800 uppercase italic">Recursos</h3>
             <div class="bg-blue-600 p-6 rounded-[2rem] shadow-lg space-y-4">
-                <p class="text-white text-xs font-bold uppercase tracking-widest">Añadir nuevo recurso:</p>
+                <p class="text-white text-xs font-bold uppercase tracking-widest">Compartir enlace:</p>
                 <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
-                    <input type="text" id="link-title" class="px-4 py-3 border-none rounded-2xl outline-none text-sm font-bold bg-white/10 text-white placeholder-white/50" placeholder="Nombre del sitio">
+                    <input type="text" id="link-title" class="px-4 py-3 border-none rounded-2xl outline-none text-sm font-bold bg-white/10 text-white placeholder-white/50" placeholder="Nombre">
                     <input type="url" id="link-url" class="px-4 py-3 border-none rounded-2xl outline-none text-sm font-bold bg-white/10 text-white placeholder-white/50" placeholder="https://...">
-                    <button id="btnSaveLink" class="bg-white text-blue-600 px-6 py-3 rounded-2xl font-black text-xs uppercase hover:bg-slate-100 transition">Compartir</button>
+                    <button id="btnSaveLink" class="bg-white text-blue-600 px-6 py-3 rounded-2xl font-black text-xs uppercase hover:bg-slate-100 transition">Añadir</button>
                 </div>
             </div>
-
             <div id="links-container" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 font-bold"></div>
         </section>
 
@@ -82,29 +76,11 @@
             </div>
         </section>
 
-        <section id="privado" class="tab-content space-y-4">
-            <div class="max-w-2xl mx-auto space-y-4">
-                <h3 class="text-2xl font-black text-slate-800 uppercase italic">Mensajería Privada</h3>
-                <div class="bg-emerald-600 p-4 rounded-3xl flex gap-2">
-                    <input type="email" id="target-user-email" class="flex-1 px-4 py-2 rounded-2xl outline-none text-sm font-bold border-none" placeholder="Email del compañero...">
-                </div>
-                <div class="bg-white rounded-[2rem] shadow-xl border border-slate-200 overflow-hidden flex flex-col h-[50vh]">
-                    <div id="private-chat-messages" class="flex-1 p-6 overflow-y-auto space-y-4 bg-slate-50 text-xs">
-                        <p class="text-center text-slate-400 font-bold uppercase py-10">Escribe un email arriba para iniciar chat</p>
-                    </div>
-                    <div class="p-4 bg-white border-t flex gap-2">
-                        <input type="text" id="private-chat-input" placeholder="Mensaje privado..." class="flex-1 px-4 py-3 border rounded-2xl outline-none bg-slate-100 text-sm font-bold">
-                        <button id="btnSendPrivate" class="bg-emerald-600 text-white px-6 py-3 rounded-2xl font-black text-xs uppercase">Enviar</button>
-                    </div>
-                </div>
-            </div>
-        </section>
-
         <section id="cuenta" class="tab-content space-y-6 max-w-xl mx-auto">
             <h3 class="text-2xl font-black text-slate-800 uppercase italic">Mi Perfil</h3>
             <div class="bg-white p-8 rounded-[2rem] shadow-lg border border-slate-100 space-y-6">
                 <div class="space-y-2 text-xs font-black uppercase tracking-widest text-slate-400">
-                    <label>Tu nombre en la plataforma</label>
+                    <label>Nombre Público</label>
                     <div class="flex gap-2">
                         <input type="text" id="display-name-input" class="flex-1 px-4 py-3 border rounded-2xl bg-slate-50 outline-none" placeholder="Nombre">
                         <button id="btnUpdateProfile" class="bg-blue-600 text-white px-5 py-2 rounded-2xl font-black text-[10px]">Actualizar</button>
@@ -113,31 +89,48 @@
                 <div class="space-y-2 text-xs font-black uppercase tracking-widest text-slate-400 pt-4 border-t">
                     <label>Nueva contraseña</label>
                     <input type="password" id="new-password-input" class="w-full px-4 py-3 border rounded-2xl bg-slate-50 outline-none mb-2" placeholder="••••••">
-                    <button id="btnUpdatePass" class="w-full bg-slate-800 text-white py-3 rounded-2xl font-black text-xs">Guardar Nueva Clave</button>
+                    <button id="btnUpdatePass" class="w-full bg-slate-800 text-white py-3 rounded-2xl font-black text-xs">Guardar Clave</button>
                 </div>
             </div>
         </section>
 
         <section id="admin" class="tab-content space-y-6">
-            <h3 class="text-2xl font-black text-purple-700 uppercase italic">Control Maestro</h3>
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <h3 class="text-2xl font-black text-purple-700 uppercase italic">Panel Admin</h3>
+            <div class="grid grid-cols-1 gap-6">
+                
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div class="bg-white p-6 rounded-[2rem] shadow-sm border border-purple-100 space-y-4">
+                        <h4 class="font-black text-slate-800 text-[10px] uppercase tracking-widest">📢 Anuncio Global</h4>
+                        <input type="text" id="admin-ann-title" class="w-full px-4 py-2 border rounded-xl outline-none" placeholder="Título">
+                        <textarea id="admin-ann-body" rows="2" class="w-full px-4 py-2 border rounded-xl outline-none text-sm" placeholder="Mensaje..."></textarea>
+                        <div class="flex gap-2">
+                            <button id="btnSaveAnn" class="flex-1 bg-purple-600 text-white py-2 rounded-xl font-black text-[10px] uppercase">Publicar</button>
+                            <button id="btnDeleteAnn" class="bg-slate-200 text-slate-600 px-4 py-2 rounded-xl font-black text-[10px] uppercase">Quitar</button>
+                        </div>
+                    </div>
+                    <div class="bg-white p-6 rounded-[2rem] shadow-sm border border-purple-100">
+                        <h4 class="font-black text-slate-800 text-[10px] uppercase mb-4 tracking-widest text-purple-600">👤 Usuarios</h4>
+                        <div class="flex gap-2 mb-4">
+                            <input type="email" id="new-user-email" class="flex-1 px-3 py-2 border rounded-xl outline-none text-sm font-bold" placeholder="email@empresa.com">
+                            <button id="btnAddUser" class="bg-purple-600 text-white px-4 py-2 rounded-xl font-black text-[10px] uppercase">Añadir</button>
+                        </div>
+                        <ul id="user-list" class="divide-y max-h-40 overflow-y-auto"></ul>
+                    </div>
+                </div>
+
                 <div class="bg-white p-6 rounded-[2rem] shadow-sm border border-purple-100 space-y-4">
-                    <h4 class="font-black text-slate-800 text-[10px] uppercase tracking-widest">📢 Anuncio Global</h4>
-                    <input type="text" id="admin-ann-title" class="w-full px-4 py-2 border rounded-xl outline-none" placeholder="Título">
-                    <textarea id="admin-ann-body" rows="2" class="w-full px-4 py-2 border rounded-xl outline-none text-sm" placeholder="Mensaje..."></textarea>
-                    <div class="flex gap-2">
-                        <button id="btnSaveAnn" class="flex-1 bg-purple-600 text-white py-2 rounded-xl font-black text-[10px] uppercase">Publicar</button>
-                        <button id="btnDeleteAnn" class="bg-slate-200 text-slate-600 px-4 py-2 rounded-xl font-black text-[10px] uppercase">Quitar</button>
+                    <h4 class="font-black text-slate-800 text-[10px] uppercase tracking-widest text-purple-600">🗑 Gestión de Contenidos</h4>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div class="bg-slate-50 p-4 rounded-2xl">
+                            <p class="text-[9px] font-black uppercase text-slate-400 mb-3">Eliminar Enlaces</p>
+                            <ul id="admin-links-list" class="divide-y space-y-2 max-h-60 overflow-y-auto"></ul>
+                        </div>
+                        <div class="flex flex-col justify-center">
+                            <button onclick="clearChat()" class="w-full bg-red-100 text-red-600 font-black py-4 text-xs uppercase rounded-2xl hover:bg-red-200 transition">Borrar Chat Grupal</button>
+                        </div>
                     </div>
                 </div>
-                <div class="bg-white p-6 rounded-[2rem] shadow-sm border border-purple-100">
-                    <h4 class="font-black text-slate-800 text-[10px] uppercase mb-4 tracking-widest text-purple-600">👤 Gestión de Usuarios</h4>
-                    <div class="flex gap-2 mb-4">
-                        <input type="email" id="new-user-email" class="flex-1 px-3 py-2 border rounded-xl outline-none text-sm font-bold" placeholder="email@empresa.com">
-                        <button id="btnAddUser" class="bg-purple-600 text-white px-4 py-2 rounded-xl font-black text-[10px] uppercase">Autorizar</button>
-                    </div>
-                    <ul id="user-list" class="divide-y max-h-40 overflow-y-auto"></ul>
-                </div>
+
             </div>
         </section>
     </main>
@@ -145,7 +138,7 @@
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
         import { getAuth, onAuthStateChanged, signOut, updateProfile, updatePassword } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
-        import { getFirestore, collection, addDoc, query, orderBy, onSnapshot, serverTimestamp, doc, setDoc, deleteDoc, getDocs, where, or } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+        import { getFirestore, collection, addDoc, query, orderBy, onSnapshot, serverTimestamp, doc, setDoc, deleteDoc, getDocs } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
         const firebaseConfig = {
             apiKey: "AIzaSyAJd8syrMPQunEfBTH0sf9Khj_mSTkWeto",
@@ -160,10 +153,8 @@
         const auth = getAuth(app);
         const db = getFirestore(app);
         
-        // --- CAMBIA ESTO ---
-        const adminEmails = ["u6282143640@gmail.com", "alvaro.guerreromaldonado@alumno.fomento.edu"]; 
+        const adminEmails = ["alvaro.guerreromaldonado@alumno.fomento.edu", "u6282143640@gmail.com"]; // CAMBIA ESTO
 
-        // SISTEMA DE NOTIFICACIONES INTERNAS (TOAST)
         const showToast = (msg, type = "success") => {
             const container = document.getElementById('toast-container');
             const toast = document.createElement('div');
@@ -188,7 +179,7 @@
                 const name = user.displayName || user.email.split('@')[0];
                 document.getElementById('user-name').innerText = name;
                 document.getElementById('display-name-input').value = user.displayName || "";
-                document.getElementById('welcome-text').innerText = `BIENVENIDO, ${name.toUpperCase()}`;
+                document.getElementById('welcome-text').innerText = `HOLA, ${name.toUpperCase()}`;
                 document.getElementById('current-date').innerText = new Date().toLocaleDateString('es-ES', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
                 if (adminEmails.includes(user.email)) document.getElementById('admin-tab').classList.remove('hidden');
             } else { window.location.href = "index.html"; }
@@ -227,91 +218,55 @@
             box.scrollTop = box.scrollHeight;
         });
 
-        // --- CHAT PRIVADO ---
-        const privRef = collection(db, "chats_privados");
-        document.getElementById('btnSendPrivate').onclick = async () => {
-            const target = document.getElementById('target-user-email').value.toLowerCase().trim();
-            const text = document.getElementById('private-chat-input').value;
-            if (target && text) {
-                await addDoc(privRef, {
-                    sender: auth.currentUser.email,
-                    receiver: target,
-                    text: text,
-                    timestamp: serverTimestamp()
-                });
-                document.getElementById('private-chat-input').value = "";
-                showToast("Mensaje enviado");
-            } else { showToast("Escribe un email y mensaje", "error"); }
-        };
-
-        // Escuchar mensajes privados (donde yo soy emisor o receptor)
-        onAuthStateChanged(auth, (user) => {
-            if(user) {
-                const q = query(privRef, or(where("sender", "==", user.email), where("receiver", "==", user.email)), orderBy("timestamp", "asc"));
-                onSnapshot(q, (snap) => {
-                    const box = document.getElementById('private-chat-messages');
-                    const target = document.getElementById('target-user-email').value.toLowerCase().trim();
-                    if(!target) return;
-                    
-                    const filtered = snap.docs.filter(d => 
-                        (d.data().sender === user.email && d.data().receiver === target) || 
-                        (d.data().sender === target && d.data().receiver === user.email)
-                    );
-
-                    box.innerHTML = filtered.length > 0 ? filtered.map(d => `
-                        <div class="flex flex-col ${d.data().sender === user.email ? 'items-end' : 'items-start'}">
-                            <div class="${d.data().sender === user.email ? 'bg-emerald-600 text-white' : 'bg-white border text-slate-800'} p-3 rounded-2xl shadow-sm max-w-[90%]">
-                                <p class="text-xs font-bold">${d.data().text}</p>
-                            </div>
-                        </div>`).join('') : '<p class="text-center text-slate-400 uppercase font-black py-10">Sin mensajes con este usuario</p>';
-                    box.scrollTop = box.scrollHeight;
-                });
-            }
-        });
-
-        // --- ENLACES (TODOS PUEDEN AÑADIR) ---
+        // --- ENLACES ---
         const linksRef = collection(db, "enlaces");
         document.getElementById('btnSaveLink').onclick = async () => {
             const t = document.getElementById('link-title'), u = document.getElementById('link-url');
             if(t.value && u.value) {
                 await addDoc(linksRef, { nombre: t.value, url: u.value, user: auth.currentUser.email, createdAt: serverTimestamp() });
-                t.value = ""; u.value = ""; showToast("Enlace compartido!");
-            } else { showToast("Rellena ambos campos", "error"); }
+                t.value = ""; u.value = ""; showToast("Enlace publicado");
+            }
         };
         onSnapshot(query(linksRef, orderBy("createdAt", "desc")), (snap) => {
-            document.getElementById('links-container').innerHTML = snap.docs.map(d => `
-                <a href="${d.data().url}" target="_blank" class="bg-white p-5 rounded-[2rem] shadow-sm hover:shadow-xl transition-all border border-slate-100 flex flex-col gap-1 group">
+            const html = snap.docs.map(d => `
+                <a href="${d.data().url}" target="_blank" class="bg-white p-5 rounded-[2rem] shadow-sm border border-slate-100 flex flex-col gap-1 group">
                     <span class="font-black text-slate-800 group-hover:text-blue-600 uppercase text-[9px] tracking-widest">${d.data().nombre}</span>
-                    <span class="text-[9px] text-slate-400 italic">Por: ${d.data().user || 'Sistema'}</span>
+                    <span class="text-[8px] text-slate-400 italic">Por: ${d.data().user || 'Sistema'}</span>
                 </a>`).join('');
+            document.getElementById('links-container').innerHTML = html;
+            
+            // Lista para Admin
+            document.getElementById('admin-links-list').innerHTML = snap.docs.map(d => `
+                <li class="flex justify-between items-center py-2 text-[10px] font-bold">
+                    <span class="truncate w-32">${d.data().nombre}</span>
+                    <button onclick="deleteLink('${d.id}')" class="text-red-500 uppercase">Borrar</button>
+                </li>`).join('');
         });
+
+        window.deleteLink = async (id) => { 
+            await deleteDoc(doc(db, "enlaces", id));
+            showToast("Enlace eliminado");
+        };
 
         // --- MI CUENTA ---
         document.getElementById('btnUpdateProfile').onclick = async () => {
-            try {
-                await updateProfile(auth.currentUser, { displayName: document.getElementById('display-name-input').value });
-                showToast("Nombre actualizado");
-                setTimeout(() => location.reload(), 1000);
-            } catch (e) { showToast("Error al actualizar", "error"); }
+            await updateProfile(auth.currentUser, { displayName: document.getElementById('display-name-input').value });
+            showToast("Nombre actualizado");
+            setTimeout(() => location.reload(), 1000);
         };
         document.getElementById('btnUpdatePass').onclick = async () => {
             const newPass = document.getElementById('new-password-input').value;
-            if (newPass.length < 6) return showToast("Mínimo 6 caracteres", "error");
-            try {
+            if (newPass.length >= 6) {
                 await updatePassword(auth.currentUser, newPass);
-                showToast("Contraseña cambiada");
+                showToast("Clave cambiada");
                 document.getElementById('new-password-input').value = "";
-            } catch (e) { showToast("Inicia sesión de nuevo", "error"); }
+            } else { showToast("Mínimo 6 caracteres", "error"); }
         };
 
-        // --- ADMIN ---
+        // --- ADMIN OTROS ---
         document.getElementById('btnSaveAnn').onclick = async () => {
-            const tit = document.getElementById('admin-ann-title').value;
-            const msg = document.getElementById('admin-ann-body').value;
-            if(tit && msg) {
-                await setDoc(doc(db, "configuracion", "anuncio"), { titulo: tit, mensaje: msg });
-                showToast("Anuncio publicado");
-            }
+            await setDoc(doc(db, "configuracion", "anuncio"), { titulo: document.getElementById('admin-ann-title').value, mensaje: document.getElementById('admin-ann-body').value });
+            showToast("Anuncio publicado");
         };
         document.getElementById('btnDeleteAnn').onclick = async () => {
             await deleteDoc(doc(db, "configuracion", "anuncio"));
@@ -319,20 +274,17 @@
         };
         document.getElementById('btnAddUser').onclick = async () => {
             const email = document.getElementById('new-user-email').value.toLowerCase().trim();
-            if(email) {
-                await setDoc(doc(db, "usuarios_autorizados", email), { email });
-                showToast("Usuario autorizado");
-            }
+            if(email) { await setDoc(doc(db, "usuarios_autorizados", email), { email }); showToast("Autorizado"); }
         };
         onSnapshot(collection(db, "usuarios_autorizados"), (snap) => {
             document.getElementById('user-list').innerHTML = snap.docs.map(d => `
                 <li class="py-2 flex justify-between items-center text-[10px] font-black uppercase text-slate-400">
                     <span>${d.id}</span>
-                    <button onclick="removeUser('${d.id}')" class="text-red-400">Revocar</button>
+                    <button onclick="removeUser('${d.id}')" class="text-red-400">Quitar</button>
                 </li>`).join('');
         });
-        window.removeUser = async (id) => { if(confirm("¿Quitar?")) { await deleteDoc(doc(db, "usuarios_autorizados", id)); showToast("Acceso revocado"); } };
-        window.clearChat = async () => { if(confirm("¿Borrar?")) { (await getDocs(chatRef)).forEach(d => deleteDoc(d.ref)); showToast("Chat borrado"); } };
+        window.removeUser = async (id) => { await deleteDoc(doc(db, "usuarios_autorizados", id)); showToast("Acceso quitado"); };
+        window.clearChat = async () => { (await getDocs(chatRef)).forEach(d => deleteDoc(d.ref)); showToast("Chat vaciado"); };
     </script>
 </body>
 </html>
