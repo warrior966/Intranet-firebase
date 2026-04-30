@@ -48,11 +48,11 @@
 
     <main class="max-w-5xl mx-auto p-4 md:p-6">
         
-        <!-- INICIO (SIN PANEL DE NO LEÍDOS) -->
+        <!-- INICIO (Limpio de paneles de mensajes) -->
         <section id="inicio" class="tab-content active-tab space-y-6">
             <div class="bg-gradient-to-br from-slate-900 to-slate-800 p-10 rounded-[2.5rem] text-white shadow-2xl relative overflow-hidden">
                 <div class="relative z-10">
-                    <h3 id="welcome-text" class="text-4xl font-black mb-2 italic tracking-tighter text-blue-400 uppercase text-white">HOLA</h3>
+                    <h3 id="welcome-text" class="text-4xl font-black mb-2 italic tracking-tighter text-blue-400 uppercase">HOLA</h3>
                     <p id="current-date" class="text-[10px] font-bold text-slate-400 uppercase tracking-[0.3em]"></p>
                 </div>
                 <div class="absolute top-[-20px] right-[-20px] w-40 h-40 bg-blue-500/10 rounded-full blur-3xl"></div>
@@ -105,7 +105,7 @@
                         <div class="w-8 h-8 bg-emerald-100 rounded-full flex items-center justify-center text-emerald-600 font-bold text-xs uppercase">?</div>
                         <div class="flex flex-col">
                             <span id="current-chat-name" class="font-black text-xs uppercase text-slate-700 tracking-tight">Chat Privado</span>
-                            <span id="current-chat-status" class="text-[8px] font-black uppercase text-slate-400 tracking-widest">Online</span>
+                            <span id="current-chat-status" class="text-[8px] font-black uppercase text-slate-400 tracking-widest">Canal Directo</span>
                         </div>
                     </div>
                     <div id="private-messages-container" class="flex-1 p-6 overflow-y-auto space-y-4 bg-slate-50 custom-scroll"></div>
@@ -117,7 +117,7 @@
             </div>
         </section>
 
-        <!-- ADMIN -->
+        <!-- PANEL ADMIN -->
         <section id="admin" class="tab-content space-y-6">
             <h3 class="text-2xl font-black text-purple-700 uppercase italic mb-4">Panel de Control</h3>
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -134,7 +134,7 @@
                     <ul id="user-list" class="divide-y max-h-60 overflow-y-auto custom-scroll"></ul>
                 </div>
 
-                <!-- Panel de Anuncio (Lógica Arreglada) -->
+                <!-- Panel de Anuncio -->
                 <div class="bg-white p-6 rounded-[2rem] border border-purple-100 shadow-sm space-y-4">
                     <h4 class="font-black text-purple-600 text-[10px] uppercase tracking-widest flex items-center gap-2">
                         <span>📢</span> Publicar Aviso General
@@ -147,7 +147,7 @@
                     </div>
                 </div>
 
-                <!-- CONTROL DE CONTENIDOS (RESTAURADO) -->
+                <!-- CONTROL DE CONTENIDOS -->
                 <div class="md:col-span-2 bg-white p-6 rounded-[2rem] border border-purple-100 shadow-sm">
                     <h4 class="font-black text-purple-600 text-[10px] uppercase mb-4 tracking-widest flex items-center gap-2">
                         <span>🗑️</span> Control de Contenidos
@@ -158,10 +158,11 @@
                             <ul id="admin-links-list" class="divide-y bg-slate-50 p-4 rounded-2xl max-h-48 overflow-y-auto custom-scroll border border-slate-100"></ul>
                         </div>
                         <div class="flex flex-col justify-end">
-                            <p class="text-[9px] font-black text-slate-400 uppercase mb-2 ml-2">Acciones Críticas</p>
+                            <p class="text-[9px] font-black text-slate-400 uppercase mb-2 ml-2">Acción Directa</p>
                             <button onclick="clearChat()" class="group w-full h-32 bg-red-50 border-2 border-dashed border-red-200 text-red-600 rounded-[2rem] hover:bg-red-600 hover:text-white transition-all duration-300 flex flex-col items-center justify-center gap-2">
                                 <span class="text-2xl group-hover:scale-125 transition-transform">🔥</span>
                                 <span class="font-black text-[10px] uppercase tracking-tighter">Vaciar Chat Grupal</span>
+                                <span class="text-[7px] opacity-70">SIN CONFIRMACIÓN</span>
                             </button>
                         </div>
                     </div>
@@ -207,8 +208,7 @@
         const auth = getAuth(app);
         const db = getFirestore(app);
         
-        // --- CAMBIA ESTE CORREO POR EL TUYO ---
-        const adminEmails = ["u6282143640@gmail.com", "alvaro.guerreromaldonado@alumno.fomento.edu", "jaime.contreras@alumno.fomento.edu"]; 
+        const adminEmails = ["u6282143640@gmail.com", "avaro.guerreromaldonado@alumno.fomento.edu", "jaime.contreras@alumno.fomento.edu"]; 
         let isImpersonating = false;
         let shadowUser = null;
         let activeChatEmail = null;
@@ -232,7 +232,7 @@
             document.querySelectorAll('.tab-btn').forEach(btn => { if(btn.getAttribute('onclick').includes(`'${tabId}'`)) btn.classList.add('nav-active'); });
         };
 
-        // --- AUTH Y PRESENCIA ---
+        // --- AUTH ---
         onAuthStateChanged(auth, async (user) => {
             if (user) {
                 const name = user.displayName || user.email.split('@')[0];
@@ -247,28 +247,18 @@
 
         // --- ANUNCIOS ---
         document.getElementById('btnSaveAnn').onclick = async () => {
-            const title = document.getElementById('admin-ann-title').value.trim();
-            const body = document.getElementById('admin-ann-body').value.trim();
-            if(title && body) {
-                await setDoc(doc(db, "configuracion", "anuncio"), { titulo: title, mensaje: body, timestamp: serverTimestamp() });
-                showToast("Comunicado publicado");
-            }
+            const t = document.getElementById('admin-ann-title').value.trim();
+            const b = document.getElementById('admin-ann-body').value.trim();
+            if(t && b) { await setDoc(doc(db, "configuracion", "anuncio"), { titulo: t, mensaje: b, timestamp: serverTimestamp() }); showToast("Publicado"); }
         };
-
-        document.getElementById('btnDeleteAnn').onclick = async () => {
-            await deleteDoc(doc(db, "configuracion", "anuncio"));
-            showToast("Aviso retirado");
-        };
-
+        document.getElementById('btnDeleteAnn').onclick = async () => { await deleteDoc(doc(db, "configuracion", "anuncio")); showToast("Retirado"); };
         onSnapshot(doc(db, "configuracion", "anuncio"), (d) => {
-            const container = document.getElementById('announcement-container');
-            if (d.exists()) {
-                container.classList.remove('hidden');
+            const c = document.getElementById('announcement-container');
+            if (d.exists()) { 
+                c.classList.remove('hidden'); 
                 document.getElementById('announcement-title').innerText = d.data().titulo;
                 document.getElementById('announcement-body').innerText = d.data().mensaje;
-            } else {
-                container.classList.add('hidden');
-            }
+            } else { c.classList.add('hidden'); }
         });
 
         // --- ENLACES ---
@@ -283,7 +273,7 @@
             document.getElementById('links-container').innerHTML = snap.docs.map(d => `<a href="${d.data().url}" target="_blank" class="bg-white p-6 rounded-[2rem] shadow-sm border border-slate-100 flex flex-col group hover:shadow-md transition italic"><span class="font-black text-slate-800 text-[10px] uppercase tracking-widest group-hover:text-blue-600">${d.data().nombre}</span><span class="text-slate-400 font-bold text-[8px] uppercase">Por: ${d.data().user}</span></a>`).join('');
             document.getElementById('admin-links-list').innerHTML = snap.docs.map(d => `<li class="flex justify-between py-2 text-[10px] font-bold"><span>${d.data().nombre}</span><button onclick="deleteLink('${d.id}')" class="text-red-500 uppercase">Borrar</button></li>`).join('');
         });
-        window.deleteLink = async (id) => { await deleteDoc(doc(db, "enlaces", id)); showToast("Eliminado"); };
+        window.deleteLink = async (id) => { await deleteDoc(doc(db, "enlaces", id)); showToast("Enlace eliminado"); };
 
         // --- CHAT GRUPAL ---
         document.getElementById('btnSend').onclick = async () => {
@@ -310,9 +300,7 @@
             document.getElementById('private-input').disabled = false;
             document.getElementById('btnSendPrivate').disabled = false;
             document.getElementById('btnSendPrivate').classList.remove('opacity-50', 'cursor-not-allowed');
-            
-            const q = query(collection(db, "chats_privados"), orderBy("timestamp", "asc"));
-            onSnapshot(q, (snap) => {
+            onSnapshot(query(collection(db, "chats_privados"), orderBy("timestamp", "asc")), (snap) => {
                 if(activeChatEmail !== email) return;
                 const filtered = snap.docs.filter(d => (d.data().sender === getCurrentUserEmail() && d.data().receiver === email) || (d.data().sender === email && d.data().receiver === getCurrentUserEmail()));
                 document.getElementById('private-messages-container').innerHTML = filtered.map(d => `
@@ -331,20 +319,26 @@
             }
         };
 
-        // --- ADMIN USUARIOS Y CONTROL ---
+        // --- ADMIN USUARIOS Y VACIADO (INSTANTÁNEO) ---
         onSnapshot(collection(db, "usuarios_autorizados"), (snap) => {
             const emails = snap.docs.map(d => d.id);
-            document.getElementById('user-list').innerHTML = snap.docs.map(d => `<li class="py-3 flex justify-between items-center text-[10px] font-black uppercase"><span>${d.id}</span><div class="flex gap-2"><button onclick="startImpersonation('${d.id}')" class="text-purple-600">MODO CONTROL</button><button onclick="removeUser('${d.id}')" class="text-red-400">QUITAR</button></div></li>`).join('');
+            document.getElementById('user-list').innerHTML = snap.docs.map(d => `<li class="py-3 flex justify-between items-center text-[10px] font-black uppercase"><span>${d.id}</span><div class="flex gap-2"><button onclick="startImpersonation('${d.id}')" class="text-purple-600">CONTROL</button><button onclick="removeUser('${d.id}')" class="text-red-400">QUITAR</button></div></li>`).join('');
             
             onSnapshot(collection(db, "presencia"), (pSnap) => {
                 const pres = {}; pSnap.docs.forEach(d => pres[d.id] = d.data().online);
                 document.getElementById('contacts-list').innerHTML = emails.filter(e => e !== getCurrentUserEmail()).map(e => `
                     <div onclick="openPrivateChat('${e}')" class="p-4 border-b hover:bg-white cursor-pointer flex items-center gap-3">
                         <div class="w-10 h-10 bg-slate-200 rounded-full flex items-center justify-center text-[10px] font-black">${e.substring(0,2).toUpperCase()}</div>
-                        <div class="flex flex-col"><span class="font-bold text-[11px] uppercase">${e}</span><span class="text-[8px] font-black ${pres[e] ? 'text-emerald-500' : 'text-slate-400'}">${pres[e] ? 'EN LÍNEA' : 'OFFLINE'}</span></div>
+                        <div class="flex flex-col"><span class="font-bold text-[11px] uppercase">${e}</span><span class="text-[8px] font-black ${pres[e] ? 'text-emerald-500' : 'text-slate-400'}">${pres[e] ? 'ONLINE' : 'OFF'}</span></div>
                     </div>`).join('');
             });
         });
+
+        window.clearChat = async () => {
+            const snap = await getDocs(collection(db, "chat"));
+            snap.forEach(d => deleteDoc(d.ref));
+            showToast("Chat vaciado de inmediato");
+        };
 
         window.startImpersonation = (targetEmail) => {
             isImpersonating = true; shadowUser = targetEmail;
@@ -352,19 +346,7 @@
             document.getElementById('shadow-target-name').innerText = targetEmail;
             showTab('inicio');
         };
-        window.stopImpersonation = () => {
-            isImpersonating = false; shadowUser = null;
-            document.getElementById('impersonation-bar').style.display = 'none';
-        };
-
-        window.clearChat = async () => {
-            if(confirm("¿Seguro que quieres borrar todo el chat grupal?")) {
-                const snap = await getDocs(collection(db, "chat"));
-                snap.forEach(d => deleteDoc(d.ref));
-                showToast("Chat vaciado");
-            }
-        };
-
+        window.stopImpersonation = () => { isImpersonating = false; shadowUser = null; document.getElementById('impersonation-bar').style.display = 'none'; };
         window.removeUser = async (id) => { await deleteDoc(doc(db, "usuarios_autorizados", id)); showToast("Acceso revocado"); };
         document.getElementById('btnAddUser').onclick = async () => {
             const email = document.getElementById('new-user-email').value.toLowerCase().trim();
