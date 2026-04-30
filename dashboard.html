@@ -21,12 +21,13 @@
 
     <div id="toast-container"></div>
 
-    <!-- Barra Superior de Suplantación -->
+    <!-- BARRA SUPLANTACIÓN -->
     <div id="impersonation-bar" class="bg-red-600 text-white px-6 py-2 flex justify-between items-center sticky top-0 z-50 shadow-lg animate-pulse">
         <span class="text-[10px] font-black uppercase tracking-widest">⚠️ MODO CONTROL REMOTO: <span id="shadow-target-name">---</span></span>
         <button onclick="stopImpersonation()" class="bg-white text-red-600 px-4 py-1 rounded-full text-[9px] font-black uppercase hover:bg-slate-100 transition">Detener</button>
     </div>
 
+    <!-- HEADER -->
     <header class="bg-white shadow-sm px-6 py-4 flex justify-between items-center sticky top-0 z-20">
         <h2 class="text-xl font-black text-blue-600 tracking-tighter italic uppercase">Intranet 2.0</h2>
         <div class="flex items-center gap-4">
@@ -35,6 +36,7 @@
         </div>
     </header>
 
+    <!-- NAVEGACIÓN -->
     <nav class="flex justify-center bg-white border-b sticky top-14 z-10 overflow-x-auto">
         <button onclick="showTab('inicio')" class="tab-btn px-6 py-4 font-bold text-[11px] uppercase tracking-widest nav-active">Inicio</button>
         <button onclick="showTab('enlaces')" class="tab-btn px-6 py-4 font-bold text-[11px] uppercase tracking-widest">Enlaces</button>
@@ -46,17 +48,16 @@
 
     <main class="max-w-5xl mx-auto p-4 md:p-6">
         
-        <!-- INICIO (Limpio de paneles de mensajes) -->
+        <!-- INICIO (SIN PANEL DE NO LEÍDOS) -->
         <section id="inicio" class="tab-content active-tab space-y-6">
             <div class="bg-gradient-to-br from-slate-900 to-slate-800 p-10 rounded-[2.5rem] text-white shadow-2xl relative overflow-hidden">
                 <div class="relative z-10">
-                    <h3 id="welcome-text" class="text-4xl font-black mb-2 italic tracking-tighter text-blue-400 uppercase">HOLA</h3>
+                    <h3 id="welcome-text" class="text-4xl font-black mb-2 italic tracking-tighter text-blue-400 uppercase text-white">HOLA</h3>
                     <p id="current-date" class="text-[10px] font-bold text-slate-400 uppercase tracking-[0.3em]"></p>
                 </div>
                 <div class="absolute top-[-20px] right-[-20px] w-40 h-40 bg-blue-500/10 rounded-full blur-3xl"></div>
             </div>
             
-            <!-- Contenedor de Anuncio dinámico -->
             <div id="announcement-container" class="hidden">
                 <div class="bg-amber-50 border-2 border-amber-200 p-8 rounded-[2.5rem] shadow-sm relative overflow-hidden">
                     <div class="absolute top-0 left-0 w-2 h-full bg-amber-400"></div>
@@ -69,7 +70,54 @@
             </div>
         </section>
 
-        <!-- PANEL ADMIN (Arreglado) -->
+        <!-- ENLACES -->
+        <section id="enlaces" class="tab-content space-y-6">
+            <div class="bg-blue-600 p-6 rounded-[2rem] shadow-lg space-y-4">
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
+                    <input type="text" id="link-title" class="px-4 py-3 rounded-2xl outline-none text-sm font-bold bg-white/10 text-white placeholder-white/50" placeholder="Nombre">
+                    <input type="url" id="link-url" class="px-4 py-3 rounded-2xl outline-none text-sm font-bold bg-white/10 text-white placeholder-white/50" placeholder="https://...">
+                    <button id="btnSaveLink" class="bg-white text-blue-600 px-6 py-3 rounded-2xl font-black text-xs uppercase hover:bg-slate-100 transition">Añadir</button>
+                </div>
+            </div>
+            <div id="links-container" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4"></div>
+        </section>
+
+        <!-- CHAT GRUPAL -->
+        <section id="chat" class="tab-content space-y-4">
+            <div class="bg-white rounded-[2rem] shadow-xl border border-slate-200 overflow-hidden flex flex-col h-[65vh] max-w-2xl mx-auto">
+                <div id="chat-messages" class="flex-1 p-6 overflow-y-auto space-y-4 bg-slate-50 custom-scroll"></div>
+                <div class="p-4 bg-white border-t flex gap-2">
+                    <input type="text" id="chat-input" placeholder="Mensaje al grupo..." class="flex-1 px-4 py-3 border rounded-2xl outline-none bg-slate-100 text-sm font-bold">
+                    <button id="btnSend" class="bg-blue-600 text-white px-6 py-3 rounded-2xl font-black text-xs uppercase">Enviar</button>
+                </div>
+            </div>
+        </section>
+
+        <!-- PRIVADOS -->
+        <section id="mensajes" class="tab-content h-[75vh]">
+            <div class="bg-white rounded-[2rem] shadow-2xl border border-slate-200 h-full flex overflow-hidden">
+                <div class="w-1/3 border-r flex flex-col bg-slate-50">
+                    <div class="p-4 border-b bg-white"><h3 class="font-black text-[10px] uppercase text-slate-400">Contactos</h3></div>
+                    <div id="contacts-list" class="flex-1 overflow-y-auto custom-scroll"></div>
+                </div>
+                <div class="flex-1 flex flex-col bg-white">
+                    <div id="chat-header" class="p-4 border-b flex items-center gap-3">
+                        <div class="w-8 h-8 bg-emerald-100 rounded-full flex items-center justify-center text-emerald-600 font-bold text-xs uppercase">?</div>
+                        <div class="flex flex-col">
+                            <span id="current-chat-name" class="font-black text-xs uppercase text-slate-700 tracking-tight">Chat Privado</span>
+                            <span id="current-chat-status" class="text-[8px] font-black uppercase text-slate-400 tracking-widest">Online</span>
+                        </div>
+                    </div>
+                    <div id="private-messages-container" class="flex-1 p-6 overflow-y-auto space-y-4 bg-slate-50 custom-scroll"></div>
+                    <div class="p-4 bg-white border-t flex gap-2">
+                        <input type="text" id="private-input" placeholder="Mensaje directo..." class="flex-1 px-4 py-3 border rounded-2xl outline-none bg-slate-100 text-sm font-bold" disabled>
+                        <button id="btnSendPrivate" class="bg-emerald-600 text-white px-6 py-3 rounded-2xl font-black text-xs uppercase opacity-50 cursor-not-allowed" disabled>Enviar</button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ADMIN -->
         <section id="admin" class="tab-content space-y-6">
             <h3 class="text-2xl font-black text-purple-700 uppercase italic mb-4">Panel de Control</h3>
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -99,55 +147,29 @@
                     </div>
                 </div>
 
-                <!-- Otras secciones (Enlaces, Perfil, etc. se mantienen funcionales) -->
-            </div>
-        </section>
-
-        <!-- (Se mantienen las secciones de Enlaces, Chat, Mensajes y Cuenta igual que en la versión anterior para asegurar funcionalidad) -->
-        <section id="enlaces" class="tab-content space-y-6">
-            <div class="bg-blue-600 p-6 rounded-[2rem] shadow-lg space-y-4">
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
-                    <input type="text" id="link-title" class="px-4 py-3 rounded-2xl outline-none text-sm font-bold bg-white/10 text-white placeholder-white/50" placeholder="Nombre">
-                    <input type="url" id="link-url" class="px-4 py-3 rounded-2xl outline-none text-sm font-bold bg-white/10 text-white placeholder-white/50" placeholder="https://...">
-                    <button id="btnSaveLink" class="bg-white text-blue-600 px-6 py-3 rounded-2xl font-black text-xs uppercase">Añadir</button>
-                </div>
-            </div>
-            <div id="links-container" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4"></div>
-        </section>
-
-        <section id="chat" class="tab-content space-y-4">
-            <div class="bg-white rounded-[2rem] shadow-xl border border-slate-200 overflow-hidden flex flex-col h-[65vh] max-w-2xl mx-auto">
-                <div id="chat-messages" class="flex-1 p-6 overflow-y-auto space-y-4 bg-slate-50 custom-scroll"></div>
-                <div class="p-4 bg-white border-t flex gap-2">
-                    <input type="text" id="chat-input" placeholder="Mensaje al grupo..." class="flex-1 px-4 py-3 border rounded-2xl outline-none bg-slate-100 text-sm font-bold">
-                    <button id="btnSend" class="bg-blue-600 text-white px-6 py-3 rounded-2xl font-black text-xs uppercase">Enviar</button>
-                </div>
-            </div>
-        </section>
-
-        <section id="mensajes" class="tab-content h-[75vh]">
-            <div class="bg-white rounded-[2rem] shadow-2xl border border-slate-200 h-full flex overflow-hidden">
-                <div class="w-1/3 border-r flex flex-col bg-slate-50">
-                    <div class="p-4 border-b bg-white"><h3 class="font-black text-[10px] uppercase text-slate-400">Contactos</h3></div>
-                    <div id="contacts-list" class="flex-1 overflow-y-auto custom-scroll"></div>
-                </div>
-                <div class="flex-1 flex flex-col bg-white">
-                    <div id="chat-header" class="p-4 border-b flex items-center gap-3">
-                        <div class="w-8 h-8 bg-emerald-100 rounded-full flex items-center justify-center text-emerald-600 font-bold text-xs uppercase" id="current-chat-avatar">?</div>
-                        <div class="flex flex-col">
-                            <span id="current-chat-name" class="font-black text-xs uppercase text-slate-700 tracking-tight">Chat Privado</span>
-                            <span id="current-chat-status" class="text-[8px] font-black uppercase text-slate-400">Selecciona un usuario</span>
+                <!-- CONTROL DE CONTENIDOS (RESTAURADO) -->
+                <div class="md:col-span-2 bg-white p-6 rounded-[2rem] border border-purple-100 shadow-sm">
+                    <h4 class="font-black text-purple-600 text-[10px] uppercase mb-4 tracking-widest flex items-center gap-2">
+                        <span>🗑️</span> Control de Contenidos
+                    </h4>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div class="space-y-2">
+                            <p class="text-[9px] font-black text-slate-400 uppercase ml-2">Eliminar Enlaces</p>
+                            <ul id="admin-links-list" class="divide-y bg-slate-50 p-4 rounded-2xl max-h-48 overflow-y-auto custom-scroll border border-slate-100"></ul>
+                        </div>
+                        <div class="flex flex-col justify-end">
+                            <p class="text-[9px] font-black text-slate-400 uppercase mb-2 ml-2">Acciones Críticas</p>
+                            <button onclick="clearChat()" class="group w-full h-32 bg-red-50 border-2 border-dashed border-red-200 text-red-600 rounded-[2rem] hover:bg-red-600 hover:text-white transition-all duration-300 flex flex-col items-center justify-center gap-2">
+                                <span class="text-2xl group-hover:scale-125 transition-transform">🔥</span>
+                                <span class="font-black text-[10px] uppercase tracking-tighter">Vaciar Chat Grupal</span>
+                            </button>
                         </div>
                     </div>
-                    <div id="private-messages-container" class="flex-1 p-6 overflow-y-auto space-y-4 bg-slate-50 custom-scroll"></div>
-                    <div class="p-4 bg-white border-t flex gap-2">
-                        <input type="text" id="private-input" placeholder="Mensaje directo..." class="flex-1 px-4 py-3 border rounded-2xl outline-none bg-slate-100 text-sm font-bold" disabled>
-                        <button id="btnSendPrivate" class="bg-emerald-600 text-white px-6 py-3 rounded-2xl font-black text-xs uppercase opacity-50 cursor-not-allowed" disabled>Enviar</button>
-                    </div>
                 </div>
             </div>
         </section>
 
+        <!-- PERFIL -->
         <section id="cuenta" class="tab-content space-y-6 max-w-xl mx-auto">
             <h3 class="text-2xl font-black text-slate-800 uppercase italic">Mi Cuenta</h3>
             <div class="bg-white p-8 rounded-[2rem] shadow-lg border border-slate-100 space-y-6">
@@ -172,7 +194,6 @@
         import { getAuth, onAuthStateChanged, signOut, updateProfile, updatePassword } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
         import { getFirestore, collection, addDoc, query, orderBy, onSnapshot, serverTimestamp, doc, setDoc, deleteDoc, getDocs, updateDoc, where } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
-        // CONFIGURACIÓN FIREBASE (Mantener tus datos)
         const firebaseConfig = {
             apiKey: "AIzaSyAJd8syrMPQunEfBTH0sf9Khj_mSTkWeto",
             authDomain: "intranet-ba388.firebaseapp.com",
@@ -186,7 +207,7 @@
         const auth = getAuth(app);
         const db = getFirestore(app);
         
-        // CORREO ADMIN PRINCIPAL
+        // --- CAMBIA ESTE CORREO POR EL TUYO ---
         const adminEmails = ["u6282143640@gmail.com", "alvaro.guerreromaldonado@alumno.fomento.edu", "jaime.contreras@alumno.fomento.edu"]; 
         let isImpersonating = false;
         let shadowUser = null;
@@ -211,42 +232,7 @@
             document.querySelectorAll('.tab-btn').forEach(btn => { if(btn.getAttribute('onclick').includes(`'${tabId}'`)) btn.classList.add('nav-active'); });
         };
 
-        // --- GESTIÓN DE ANUNCIOS (ARREGLADO) ---
-        document.getElementById('btnSaveAnn').onclick = async () => {
-            const title = document.getElementById('admin-ann-title').value.trim();
-            const body = document.getElementById('admin-ann-body').value.trim();
-            if(title && body) {
-                await setDoc(doc(db, "configuracion", "anuncio"), { 
-                    titulo: title, 
-                    mensaje: body,
-                    timestamp: serverTimestamp() 
-                });
-                showToast("Comunicado publicado con éxito");
-            } else {
-                showToast("Faltan datos para publicar", "error");
-            }
-        };
-
-        document.getElementById('btnDeleteAnn').onclick = async () => {
-            await deleteDoc(doc(db, "configuracion", "anuncio"));
-            document.getElementById('admin-ann-title').value = "";
-            document.getElementById('admin-ann-body').value = "";
-            showToast("Comunicado retirado");
-        };
-
-        // Escuchar anuncio en tiempo real para la pestaña Inicio
-        onSnapshot(doc(db, "configuracion", "anuncio"), (d) => {
-            const container = document.getElementById('announcement-container');
-            if (d.exists()) {
-                container.classList.remove('hidden');
-                document.getElementById('announcement-title').innerText = d.data().titulo;
-                document.getElementById('announcement-body').innerText = d.data().mensaje;
-            } else {
-                container.classList.add('hidden');
-            }
-        });
-
-        // --- LÓGICA DE USUARIOS Y AUTH ---
+        // --- AUTH Y PRESENCIA ---
         onAuthStateChanged(auth, async (user) => {
             if (user) {
                 const name = user.displayName || user.email.split('@')[0];
@@ -259,23 +245,33 @@
             } else { window.location.href = "index.html"; }
         });
 
-        // --- OTROS MÓDULOS (ENLACES, CHAT, PRIVADOS, SUPLANTACIÓN) ---
-        // Se mantiene la misma lógica robusta de los pasos anteriores para no perder funcionalidades.
-        
-        // Suplantación
-        window.startImpersonation = (targetEmail) => {
-            isImpersonating = true; shadowUser = targetEmail;
-            document.getElementById('impersonation-bar').style.display = 'flex';
-            document.getElementById('shadow-target-name').innerText = targetEmail;
-            showToast(`Controlando cuenta de ${targetEmail}`);
-        };
-        window.stopImpersonation = () => {
-            isImpersonating = false; shadowUser = null;
-            document.getElementById('impersonation-bar').style.display = 'none';
-            showToast("Vuelto a sesión original");
+        // --- ANUNCIOS ---
+        document.getElementById('btnSaveAnn').onclick = async () => {
+            const title = document.getElementById('admin-ann-title').value.trim();
+            const body = document.getElementById('admin-ann-body').value.trim();
+            if(title && body) {
+                await setDoc(doc(db, "configuracion", "anuncio"), { titulo: title, mensaje: body, timestamp: serverTimestamp() });
+                showToast("Comunicado publicado");
+            }
         };
 
-        // Enlaces
+        document.getElementById('btnDeleteAnn').onclick = async () => {
+            await deleteDoc(doc(db, "configuracion", "anuncio"));
+            showToast("Aviso retirado");
+        };
+
+        onSnapshot(doc(db, "configuracion", "anuncio"), (d) => {
+            const container = document.getElementById('announcement-container');
+            if (d.exists()) {
+                container.classList.remove('hidden');
+                document.getElementById('announcement-title').innerText = d.data().titulo;
+                document.getElementById('announcement-body').innerText = d.data().mensaje;
+            } else {
+                container.classList.add('hidden');
+            }
+        });
+
+        // --- ENLACES ---
         document.getElementById('btnSaveLink').onclick = async () => {
             const t = document.getElementById('link-title'), u = document.getElementById('link-url');
             if(t.value && u.value) {
@@ -287,55 +283,9 @@
             document.getElementById('links-container').innerHTML = snap.docs.map(d => `<a href="${d.data().url}" target="_blank" class="bg-white p-6 rounded-[2rem] shadow-sm border border-slate-100 flex flex-col group hover:shadow-md transition italic"><span class="font-black text-slate-800 text-[10px] uppercase tracking-widest group-hover:text-blue-600">${d.data().nombre}</span><span class="text-slate-400 font-bold text-[8px] uppercase">Por: ${d.data().user}</span></a>`).join('');
             document.getElementById('admin-links-list').innerHTML = snap.docs.map(d => `<li class="flex justify-between py-2 text-[10px] font-bold"><span>${d.data().nombre}</span><button onclick="deleteLink('${d.id}')" class="text-red-500 uppercase">Borrar</button></li>`).join('');
         });
-        window.deleteLink = async (id) => { await deleteDoc(doc(db, "enlaces", id)); showToast("Enlace eliminado"); };
+        window.deleteLink = async (id) => { await deleteDoc(doc(db, "enlaces", id)); showToast("Eliminado"); };
 
-        // Usuarios Admin
-        onSnapshot(collection(db, "usuarios_autorizados"), (snap) => {
-            const emails = snap.docs.map(d => d.id);
-            document.getElementById('user-list').innerHTML = snap.docs.map(d => `<li class="py-3 flex justify-between items-center text-[10px] font-black uppercase"><span>${d.id}</span><div class="flex gap-2"><button onclick="startImpersonation('${d.id}')" class="text-purple-600">MODO CONTROL</button><button onclick="removeUser('${d.id}')" class="text-red-400">QUITAR</button></div></li>`).join('');
-            
-            onSnapshot(collection(db, "presencia"), (pSnap) => {
-                const pres = {}; pSnap.docs.forEach(d => pres[d.id] = d.data().online);
-                document.getElementById('contacts-list').innerHTML = emails.filter(e => e !== getCurrentUserEmail()).map(e => `
-                    <div onclick="openPrivateChat('${e}')" class="p-4 border-b hover:bg-white cursor-pointer flex items-center gap-3">
-                        <div class="w-10 h-10 bg-slate-200 rounded-full flex items-center justify-center text-[10px] font-black">${e.substring(0,2).toUpperCase()}</div>
-                        <div class="flex flex-col">
-                            <span class="font-bold text-[11px] uppercase">${e}</span>
-                            <span class="text-[8px] font-black ${pres[e] ? 'text-emerald-500' : 'text-slate-400'}">${pres[e] ? 'EN LÍNEA' : 'DESCONECTADO'}</span>
-                        </div>
-                    </div>`).join('');
-            });
-        });
-
-        // Chat Privado
-        window.openPrivateChat = async (email) => {
-            activeChatEmail = email;
-            document.getElementById('current-chat-name').innerText = email;
-            document.getElementById('private-input').disabled = false;
-            document.getElementById('btnSendPrivate').disabled = false;
-            document.getElementById('btnSendPrivate').classList.remove('opacity-50', 'cursor-not-allowed');
-            const myEmail = getCurrentUserEmail();
-
-            onSnapshot(query(collection(db, "chats_privados"), orderBy("timestamp", "asc")), (snap) => {
-                if(activeChatEmail !== email) return;
-                const filtered = snap.docs.filter(d => (d.data().sender === myEmail && d.data().receiver === email) || (d.data().sender === email && d.data().receiver === myEmail));
-                document.getElementById('private-messages-container').innerHTML = filtered.map(d => `
-                    <div class="flex flex-col ${d.data().sender === myEmail ? 'items-end' : 'items-start'}">
-                        <div class="${d.data().sender === myEmail ? 'bg-emerald-600 text-white' : 'bg-slate-200 text-slate-800'} p-3 rounded-2xl shadow-sm max-w-[85%] text-sm font-bold">${d.data().text}</div>
-                    </div>`).join('');
-                document.getElementById('private-messages-container').scrollTop = 99999;
-            });
-        };
-
-        document.getElementById('btnSendPrivate').onclick = async () => {
-            const input = document.getElementById('private-input');
-            if(input.value.trim() && activeChatEmail) {
-                await addDoc(collection(db, "chats_privados"), { sender: getCurrentUserEmail(), receiver: activeChatEmail, text: input.value, read: false, timestamp: serverTimestamp() });
-                input.value = "";
-            }
-        };
-
-        // Chat Grupal
+        // --- CHAT GRUPAL ---
         document.getElementById('btnSend').onclick = async () => {
             const input = document.getElementById('chat-input');
             if(input.value.trim()) {
@@ -353,26 +303,84 @@
             document.getElementById('chat-messages').scrollTop = 9999;
         });
 
-        // Perfil
-        document.getElementById('btnUpdateProfile').onclick = async () => {
-            await updateProfile(auth.currentUser, { displayName: document.getElementById('display-name-input').value });
-            showToast("Nombre actualizado");
+        // --- CHAT PRIVADO ---
+        window.openPrivateChat = async (email) => {
+            activeChatEmail = email;
+            document.getElementById('current-chat-name').innerText = email;
+            document.getElementById('private-input').disabled = false;
+            document.getElementById('btnSendPrivate').disabled = false;
+            document.getElementById('btnSendPrivate').classList.remove('opacity-50', 'cursor-not-allowed');
+            
+            const q = query(collection(db, "chats_privados"), orderBy("timestamp", "asc"));
+            onSnapshot(q, (snap) => {
+                if(activeChatEmail !== email) return;
+                const filtered = snap.docs.filter(d => (d.data().sender === getCurrentUserEmail() && d.data().receiver === email) || (d.data().sender === email && d.data().receiver === getCurrentUserEmail()));
+                document.getElementById('private-messages-container').innerHTML = filtered.map(d => `
+                    <div class="flex flex-col ${d.data().sender === getCurrentUserEmail() ? 'items-end' : 'items-start'}">
+                        <div class="${d.data().sender === getCurrentUserEmail() ? 'bg-emerald-600 text-white' : 'bg-slate-200 text-slate-800'} p-3 rounded-2xl shadow-sm max-w-[85%] text-sm font-bold">${d.data().text}</div>
+                    </div>`).join('');
+                document.getElementById('private-messages-container').scrollTop = 99999;
+            });
         };
-        document.getElementById('btnUpdatePass').onclick = async () => {
-            const pass = document.getElementById('new-password-input').value;
-            if(pass.length >= 6) { 
-                await updatePassword(auth.currentUser, pass); 
-                showToast("Clave actualizada");
-                document.getElementById('new-password-input').value = "";
-            } else { showToast("Mínimo 6 caracteres", "error"); }
+
+        document.getElementById('btnSendPrivate').onclick = async () => {
+            const input = document.getElementById('private-input');
+            if(input.value.trim() && activeChatEmail) {
+                await addDoc(collection(db, "chats_privados"), { sender: getCurrentUserEmail(), receiver: activeChatEmail, text: input.value, timestamp: serverTimestamp() });
+                input.value = "";
+            }
+        };
+
+        // --- ADMIN USUARIOS Y CONTROL ---
+        onSnapshot(collection(db, "usuarios_autorizados"), (snap) => {
+            const emails = snap.docs.map(d => d.id);
+            document.getElementById('user-list').innerHTML = snap.docs.map(d => `<li class="py-3 flex justify-between items-center text-[10px] font-black uppercase"><span>${d.id}</span><div class="flex gap-2"><button onclick="startImpersonation('${d.id}')" class="text-purple-600">MODO CONTROL</button><button onclick="removeUser('${d.id}')" class="text-red-400">QUITAR</button></div></li>`).join('');
+            
+            onSnapshot(collection(db, "presencia"), (pSnap) => {
+                const pres = {}; pSnap.docs.forEach(d => pres[d.id] = d.data().online);
+                document.getElementById('contacts-list').innerHTML = emails.filter(e => e !== getCurrentUserEmail()).map(e => `
+                    <div onclick="openPrivateChat('${e}')" class="p-4 border-b hover:bg-white cursor-pointer flex items-center gap-3">
+                        <div class="w-10 h-10 bg-slate-200 rounded-full flex items-center justify-center text-[10px] font-black">${e.substring(0,2).toUpperCase()}</div>
+                        <div class="flex flex-col"><span class="font-bold text-[11px] uppercase">${e}</span><span class="text-[8px] font-black ${pres[e] ? 'text-emerald-500' : 'text-slate-400'}">${pres[e] ? 'EN LÍNEA' : 'OFFLINE'}</span></div>
+                    </div>`).join('');
+            });
+        });
+
+        window.startImpersonation = (targetEmail) => {
+            isImpersonating = true; shadowUser = targetEmail;
+            document.getElementById('impersonation-bar').style.display = 'flex';
+            document.getElementById('shadow-target-name').innerText = targetEmail;
+            showTab('inicio');
+        };
+        window.stopImpersonation = () => {
+            isImpersonating = false; shadowUser = null;
+            document.getElementById('impersonation-bar').style.display = 'none';
+        };
+
+        window.clearChat = async () => {
+            if(confirm("¿Seguro que quieres borrar todo el chat grupal?")) {
+                const snap = await getDocs(collection(db, "chat"));
+                snap.forEach(d => deleteDoc(d.ref));
+                showToast("Chat vaciado");
+            }
         };
 
         window.removeUser = async (id) => { await deleteDoc(doc(db, "usuarios_autorizados", id)); showToast("Acceso revocado"); };
-        window.clearChat = async () => { const snap = await getDocs(collection(db, "chat")); snap.forEach(d => deleteDoc(d.ref)); showToast("Chat grupal vaciado"); };
         document.getElementById('btnAddUser').onclick = async () => {
             const email = document.getElementById('new-user-email').value.toLowerCase().trim();
-            if(email) { await setDoc(doc(db, "usuarios_autorizados", email), { email }); showToast("Personal autorizado"); }
+            if(email) { await setDoc(doc(db, "usuarios_autorizados", email), { email }); showToast("Añadido"); }
         };
+
+        // --- PERFIL ---
+        document.getElementById('btnUpdateProfile').onclick = async () => {
+            await updateProfile(auth.currentUser, { displayName: document.getElementById('display-name-input').value });
+            showToast("Nombre guardado");
+        };
+        document.getElementById('btnUpdatePass').onclick = async () => {
+            const p = document.getElementById('new-password-input').value;
+            if(p.length >= 6) { await updatePassword(auth.currentUser, p); showToast("Clave cambiada"); }
+        };
+
         document.getElementById('btnLogout').onclick = async () => { 
             await setDoc(doc(db, "presencia", auth.currentUser.email), { online: false }); 
             signOut(auth); 
