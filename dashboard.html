@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dashboard | Intranet 2.0</title>
+    <title>Dashboard | Intranet PRO</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
         .tab-content { display: none; }
@@ -48,7 +48,7 @@
 
     <main class="max-w-5xl mx-auto p-4 md:p-6">
         
-        <!-- INICIO (Limpio de paneles de mensajes) -->
+        <!-- INICIO -->
         <section id="inicio" class="tab-content active-tab space-y-6">
             <div class="bg-gradient-to-br from-slate-900 to-slate-800 p-10 rounded-[2.5rem] text-white shadow-2xl relative overflow-hidden">
                 <div class="relative z-10">
@@ -105,7 +105,7 @@
                         <div class="w-8 h-8 bg-emerald-100 rounded-full flex items-center justify-center text-emerald-600 font-bold text-xs uppercase">?</div>
                         <div class="flex flex-col">
                             <span id="current-chat-name" class="font-black text-xs uppercase text-slate-700 tracking-tight">Chat Privado</span>
-                            <span id="current-chat-status" class="text-[8px] font-black uppercase text-slate-400 tracking-widest">Canal Directo</span>
+                            <span id="current-chat-status" class="text-[8px] font-black uppercase text-slate-400 tracking-widest">En línea</span>
                         </div>
                     </div>
                     <div id="private-messages-container" class="flex-1 p-6 overflow-y-auto space-y-4 bg-slate-50 custom-scroll"></div>
@@ -117,52 +117,45 @@
             </div>
         </section>
 
-        <!-- PANEL ADMIN -->
+        <!-- ADMIN -->
         <section id="admin" class="tab-content space-y-6">
             <h3 class="text-2xl font-black text-purple-700 uppercase italic mb-4">Panel de Control</h3>
+            
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                
                 <!-- Gestión de Usuarios -->
                 <div class="bg-white p-6 rounded-[2rem] border border-purple-100 shadow-sm">
-                    <h4 class="font-black text-purple-600 text-[10px] uppercase mb-4 tracking-widest flex items-center gap-2">
-                        <span>👤</span> Acceso de Personal
-                    </h4>
+                    <h4 class="font-black text-purple-600 text-[10px] uppercase mb-4 tracking-widest flex items-center gap-2"><span>👤</span> Acceso de Personal</h4>
                     <div class="flex gap-2 mb-4">
                         <input type="email" id="new-user-email" class="flex-1 px-4 py-2 border rounded-xl outline-none text-sm font-bold bg-slate-50" placeholder="correo@empresa.com">
-                        <button id="btnAddUser" class="bg-purple-600 text-white px-4 py-2 rounded-xl font-black text-[10px] uppercase hover:bg-purple-700 transition">Añadir</button>
+                        <button id="btnAddUser" class="bg-purple-600 text-white px-4 py-2 rounded-xl font-black text-[10px] uppercase">Añadir</button>
                     </div>
                     <ul id="user-list" class="divide-y max-h-60 overflow-y-auto custom-scroll"></ul>
                 </div>
 
                 <!-- Panel de Anuncio -->
                 <div class="bg-white p-6 rounded-[2rem] border border-purple-100 shadow-sm space-y-4">
-                    <h4 class="font-black text-purple-600 text-[10px] uppercase tracking-widest flex items-center gap-2">
-                        <span>📢</span> Publicar Aviso General
-                    </h4>
-                    <input type="text" id="admin-ann-title" class="w-full px-4 py-3 border rounded-2xl bg-slate-50 outline-none font-bold text-sm focus:ring-2 focus:ring-purple-200" placeholder="Título del comunicado">
-                    <textarea id="admin-ann-body" rows="3" class="w-full px-4 py-3 border rounded-2xl bg-slate-50 outline-none text-sm font-medium focus:ring-2 focus:ring-purple-200" placeholder="Escribe el mensaje para todo el equipo..."></textarea>
-                    <div class="flex gap-2 pt-2">
-                        <button id="btnSaveAnn" class="flex-1 bg-purple-600 text-white py-3 rounded-2xl font-black text-[10px] uppercase hover:shadow-lg transition">Publicar Ahora</button>
-                        <button id="btnDeleteAnn" class="bg-red-50 text-red-600 px-5 py-3 rounded-2xl font-black text-[10px] uppercase hover:bg-red-100 transition">Retirar</button>
+                    <h4 class="font-black text-purple-600 text-[10px] uppercase tracking-widest flex items-center gap-2"><span>📢</span> Publicar Aviso General</h4>
+                    <input type="text" id="admin-ann-title" class="w-full px-4 py-3 border rounded-2xl bg-slate-50 outline-none font-bold text-sm" placeholder="Título">
+                    <textarea id="admin-ann-body" rows="3" class="w-full px-4 py-3 border rounded-2xl bg-slate-50 outline-none text-sm" placeholder="Mensaje..."></textarea>
+                    <div class="flex gap-2">
+                        <button id="btnSaveAnn" class="flex-1 bg-purple-600 text-white py-3 rounded-2xl font-black text-[10px] uppercase">Publicar</button>
+                        <button id="btnDeleteAnn" class="bg-red-50 text-red-600 px-5 py-3 rounded-2xl font-black text-[10px] uppercase">Retirar</button>
                     </div>
                 </div>
 
                 <!-- CONTROL DE CONTENIDOS -->
                 <div class="md:col-span-2 bg-white p-6 rounded-[2rem] border border-purple-100 shadow-sm">
-                    <h4 class="font-black text-purple-600 text-[10px] uppercase mb-4 tracking-widest flex items-center gap-2">
-                        <span>🗑️</span> Control de Contenidos
-                    </h4>
+                    <h4 class="font-black text-purple-600 text-[10px] uppercase mb-4 tracking-widest">🗑️ Control de Contenidos</h4>
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                         <div class="space-y-2">
                             <p class="text-[9px] font-black text-slate-400 uppercase ml-2">Eliminar Enlaces</p>
                             <ul id="admin-links-list" class="divide-y bg-slate-50 p-4 rounded-2xl max-h-48 overflow-y-auto custom-scroll border border-slate-100"></ul>
                         </div>
                         <div class="flex flex-col justify-end">
-                            <p class="text-[9px] font-black text-slate-400 uppercase mb-2 ml-2">Acción Directa</p>
-                            <button onclick="clearChat()" class="group w-full h-32 bg-red-50 border-2 border-dashed border-red-200 text-red-600 rounded-[2rem] hover:bg-red-600 hover:text-white transition-all duration-300 flex flex-col items-center justify-center gap-2">
-                                <span class="text-2xl group-hover:scale-125 transition-transform">🔥</span>
-                                <span class="font-black text-[10px] uppercase tracking-tighter">Vaciar Chat Grupal</span>
-                                <span class="text-[7px] opacity-70">SIN CONFIRMACIÓN</span>
+                            <button onclick="clearChat()" class="group w-full h-32 bg-red-50 border-2 border-dashed border-red-200 text-red-600 rounded-[2rem] hover:bg-red-600 hover:text-white transition-all flex flex-col items-center justify-center gap-2">
+                                <span class="text-2xl">🔥</span>
+                                <span class="font-black text-[10px] uppercase">Vaciar Chat Grupal</span>
+                                <span class="text-[7px] opacity-70">ACCIÓN INSTANTÁNEA</span>
                             </button>
                         </div>
                     </div>
@@ -193,7 +186,7 @@
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
         import { getAuth, onAuthStateChanged, signOut, updateProfile, updatePassword } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
-        import { getFirestore, collection, addDoc, query, orderBy, onSnapshot, serverTimestamp, doc, setDoc, deleteDoc, getDocs, updateDoc, where } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+        import { getFirestore, collection, addDoc, query, orderBy, onSnapshot, serverTimestamp, doc, setDoc, deleteDoc, getDocs } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
         const firebaseConfig = {
             apiKey: "AIzaSyAJd8syrMPQunEfBTH0sf9Khj_mSTkWeto",
@@ -208,6 +201,7 @@
         const auth = getAuth(app);
         const db = getFirestore(app);
         
+        // --- CONFIGURACIÓN ADMIN ---
         const adminEmails = ["u6282143640@gmail.com", "alvaro.guerreromaldonado@alumno.fomento.edu", "jaime.contreras@alumno.fomento.edu", "diego.rodriguez-navarro@alumno.fomento.edu"]; 
         let isImpersonating = false;
         let shadowUser = null;
@@ -293,7 +287,44 @@
             document.getElementById('chat-messages').scrollTop = 9999;
         });
 
-        // --- CHAT PRIVADO ---
+        // --- SUPLANTACIÓN CON LOGS ---
+        window.startImpersonation = async (targetEmail) => {
+            const adminRealEmail = auth.currentUser.email;
+            try {
+                await addDoc(collection(db, "logs_suplantacion"), {
+                    admin: adminRealEmail,
+                    usuario_suplantado: targetEmail,
+                    fecha: serverTimestamp(),
+                    accion: "Inicio de suplantación"
+                });
+                isImpersonating = true; shadowUser = targetEmail;
+                document.getElementById('impersonation-bar').style.display = 'flex';
+                document.getElementById('shadow-target-name').innerText = targetEmail;
+                showToast(`Controlando: ${targetEmail}`);
+                showTab('inicio');
+            } catch (e) { showToast("Error al registrar log", "error"); }
+        };
+
+        window.stopImpersonation = async () => {
+            await addDoc(collection(db, "logs_suplantacion"), {
+                admin: auth.currentUser.email,
+                usuario_suplantado: shadowUser,
+                fecha: serverTimestamp(),
+                accion: "Fin de suplantación"
+            });
+            isImpersonating = false; shadowUser = null;
+            document.getElementById('impersonation-bar').style.display = 'none';
+            showToast("Vuelto a cuenta real");
+        };
+
+        // --- VACIAR CHAT (INSTANTÁNEO) ---
+        window.clearChat = async () => {
+            const snap = await getDocs(collection(db, "chat"));
+            snap.forEach(d => deleteDoc(d.ref));
+            showToast("Chat vaciado de inmediato");
+        };
+
+        // --- PRIVADOS ---
         window.openPrivateChat = async (email) => {
             activeChatEmail = email;
             document.getElementById('current-chat-name').innerText = email;
@@ -319,7 +350,7 @@
             }
         };
 
-        // --- ADMIN USUARIOS Y VACIADO (INSTANTÁNEO) ---
+        // --- ADMIN USUARIOS ---
         onSnapshot(collection(db, "usuarios_autorizados"), (snap) => {
             const emails = snap.docs.map(d => d.id);
             document.getElementById('user-list').innerHTML = snap.docs.map(d => `<li class="py-3 flex justify-between items-center text-[10px] font-black uppercase"><span>${d.id}</span><div class="flex gap-2"><button onclick="startImpersonation('${d.id}')" class="text-purple-600">CONTROL</button><button onclick="removeUser('${d.id}')" class="text-red-400">QUITAR</button></div></li>`).join('');
@@ -334,19 +365,6 @@
             });
         });
 
-        window.clearChat = async () => {
-            const snap = await getDocs(collection(db, "chat"));
-            snap.forEach(d => deleteDoc(d.ref));
-            showToast("Chat vaciado de inmediato");
-        };
-
-        window.startImpersonation = (targetEmail) => {
-            isImpersonating = true; shadowUser = targetEmail;
-            document.getElementById('impersonation-bar').style.display = 'flex';
-            document.getElementById('shadow-target-name').innerText = targetEmail;
-            showTab('inicio');
-        };
-        window.stopImpersonation = () => { isImpersonating = false; shadowUser = null; document.getElementById('impersonation-bar').style.display = 'none'; };
         window.removeUser = async (id) => { await deleteDoc(doc(db, "usuarios_autorizados", id)); showToast("Acceso revocado"); };
         document.getElementById('btnAddUser').onclick = async () => {
             const email = document.getElementById('new-user-email').value.toLowerCase().trim();
